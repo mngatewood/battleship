@@ -41,4 +41,9 @@ class Board
     @cells.find{|cell|cell.coordinates == coordinates}
   end
 
+  def valid_location?(ship)
+    cell_coordinates = @cells.map{|cell|cell.coordinates}
+    (ship.location - cell_coordinates).empty?
+  end
+
 end

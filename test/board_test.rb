@@ -67,4 +67,17 @@ class BoardTest < Minitest::Test
     refute cell_3.occupied
   end
 
+  def test_it_knows_if_a_ship_is_out_of_bounds
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["d3", "d4"])
+    ship_2 = Ship.new("ship_2", ["d4", "d5"])
+    ship_3 = Ship.new("ship_3", ["d4", "e4"])
+    ship_4 = Ship.new("ship_4", ["d5", "d6"])
+    assert board.valid_location?(ship_1)
+    refute board.valid_location?(ship_2)
+    refute board.valid_location?(ship_3)
+    refute board.valid_location?(ship_4)
+  end
+
 end
