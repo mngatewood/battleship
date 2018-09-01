@@ -1,9 +1,11 @@
 class Ship
 
-  attr_reader :name
+  attr_reader :name,
+              :location
 
-  def initialize(name)
+  def initialize(name, location)
     @name = name
+    @location = location
   end
 
 end
