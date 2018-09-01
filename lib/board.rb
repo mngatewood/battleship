@@ -1,14 +1,17 @@
 require './lib/cell'
+require './lib/ship'
 require 'pry'
 
 class Board
 
   attr_reader :name,
-              :cells
+              :cells,
+              :ships
 
   def initialize(name)
     @name = name
     @cells = []
+    @ships = []
   end
 
   def add_cell(cell)
@@ -25,7 +28,10 @@ class Board
         add_cell(cell)
       end
     end
-    binding.pry
+  end
+
+  def place_ship(ship)
+    @ships << ship
   end
 
 end

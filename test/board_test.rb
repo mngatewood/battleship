@@ -32,4 +32,18 @@ class BoardTest < Minitest::Test
     assert_equal 16, board.cells.length
   end
 
+  def test_it_starts_with_no_ships
+    board = Board.new("Player")
+    board.create_grid
+    assert_equal []], board.ships
+  end
+
+  def test_it_can_place_a_ship
+    board = Board.new("Player")
+    ship = Ship.new("ship_1", ["a1", "a2"])
+    board.create_grid
+    board.place_ship(ship)
+    assert_equal [ship], board.ships
+  end
+
 end
