@@ -1,7 +1,8 @@
 class Cell
 
-  attr_reader :coordinates,
-              :occupied
+  attr_reader :coordinates
+  
+  attr_accessor :occupied
 
   def initialize(coordinates)
     @coordinates = coordinates

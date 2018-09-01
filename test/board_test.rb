@@ -35,7 +35,7 @@ class BoardTest < Minitest::Test
   def test_it_starts_with_no_ships
     board = Board.new("Player")
     board.create_grid
-    assert_equal []], board.ships
+    assert_equal [], board.ships
   end
 
   def test_it_can_place_a_ship
@@ -44,6 +44,27 @@ class BoardTest < Minitest::Test
     board.create_grid
     board.place_ship(ship)
     assert_equal [ship], board.ships
+  end
+
+  def test_it_can_return_a_cell_with_coordinates
+    board = Board.new("Player")
+    board.create_grid
+    cell = board.get_cell("a1")
+    assert_instance_of Cell, cell
+    assert_equal "a1", cell.coordinates
+  end
+
+  def test_it_occupies_a_cell_when_placing_a_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship = Ship.new("ship_1", ["a1", "a2"])
+    board.place_ship(ship)
+    cell_1 = board.get_cell("a1")
+    cell_2 = board.get_cell("a2")
+    cell_3 = board.get_cell("a3")
+    assert cell_1.occupied
+    assert cell_2.occupied
+    refute cell_3.occupied
   end
 
 end

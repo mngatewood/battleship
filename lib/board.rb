@@ -31,7 +31,14 @@ class Board
   end
 
   def place_ship(ship)
+    ship.location.each do |coordinate|
+      get_cell(coordinate).occupied = true
+    end
     @ships << ship
+  end
+
+  def get_cell(coordinates)
+    @cells.find{|cell|cell.coordinates == coordinates}
   end
 
 end
