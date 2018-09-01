@@ -14,4 +14,9 @@ class CellTest < Minitest::Test
     assert_equal "a1", cell.coordinates
   end
 
+  def test_it_starts_empty_with_no_ship
+    cell = Cell.new("a1")
+    refute cell.occupied
+  end
+
 end
