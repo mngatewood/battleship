@@ -126,7 +126,7 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
   end
 
-  def test_it_can_eliminate_invalid_edge_rows_and_columns
+  def test_it_can_eliminate_invalid_rows_and_columns_from_valid_ship_locations
     board = Board.new("Player")
     board.create_grid
     length = 2
@@ -155,5 +155,42 @@ class BoardTest < Minitest::Test
     expected = "invalid parameters"
     assert_equal expected, cells
   end
+
+  def test_it_can_eliminate_occupied_cells
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["a2", "a3"])
+    ship_2 = Ship.new("ship_2", ["b2", "b3"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    cells = board.eliminate_occupied_cells
+    expected = ["a1", "a4", "b1", "b4", "c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+  end
+
+  def test_it_can_return_coordinates_above_an_existing_horizontal_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    board.place_ship(ship_1)
+    length = 2
+    expected = ["a1", "a2", "b1", "b2"]
+    actual = board.get_coordinates_above_ships(ship_1.location, length)
+    assert_equal expected, actual
+
+  end
+
+  def test_can_eliminate_cells_above_an_existing_horizontal_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["b1", "b2"])
+    board.place_ship(ship_1)
+    length_of_new_ship = 2
+    cells = board.eliminate_cells_above_ships(ship_1, length_of_new_ship)
+    expected = ["a3", "a4", "b1", "b2", "b3", "b4", "c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+  end  
 
 end

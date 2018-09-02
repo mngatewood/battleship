@@ -85,4 +85,32 @@ class Board
     end
   end
 
+  def eliminate_occupied_cells
+    @cells.find_all{|cell|!cell.occupied}
+  end
+
+  def eliminate_cells_above_ships(ship, length_of_new_ship)
+    eliminated_coordinates = 
+      get_coordinates_above_ships(ship.location, length_of_new_ship)
+    @cells.find_all do |cell|
+      eliminated_coordinates.none? do |coordinate|
+        coordinate == cell.coordinates
+      end
+    end
+  end
+
+  def get_coordinates_above_ships(location, length)
+    eliminated_coordinates = []
+    while length > 0 && location[0][0] != "a"
+      invalid_coordinates = location.map do |coordinate|
+        (coordinate[0].ord-1).chr + coordinate[1]
+      end
+      eliminated_coordinates << invalid_coordinates
+      length -= 1
+      location = invalid_coordinates
+    end
+    return eliminated_coordinates.flatten.sort
+  end
+
+
 end
