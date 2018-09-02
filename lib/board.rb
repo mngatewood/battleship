@@ -76,12 +76,12 @@ class Board
   end
 
   def eliminate_invalid_edges(length, direction)
-    if direction == "h"
+    if direction == "h" && length > 1
       eliminate_invalid_columns(length)
-    elsif direction == "v"
+    elsif direction == "v" && length > 1
       eliminate_invalid_rows(length)
     else
-      "invalid direction"
+      "invalid parameters"
     end
   end
 

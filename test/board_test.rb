@@ -142,6 +142,18 @@ class BoardTest < Minitest::Test
     expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4"]
     actual = cells.map{|cell|cell.coordinates}
     assert_equal expected, actual
+
+    length = 3
+    direction = "a"
+    cells = board.eliminate_invalid_edges(length, direction)
+    expected = "invalid parameters"
+    assert_equal expected, cells
+
+    length = 1
+    direction = "h"
+    cells = board.eliminate_invalid_edges(length, direction)
+    expected = "invalid parameters"
+    assert_equal expected, cells
   end
 
 end
