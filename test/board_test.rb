@@ -94,66 +94,60 @@ class BoardTest < Minitest::Test
     assert_equal [ship_1], board.ships
   end
 
-  def test_it_eliminates_edge_columns_from_valid_ship_locations
+  def test_it_returns_coordinates_of_edge_columns_invalid_for_ship_placement
     board = Board.new("Player")
     board.create_grid
     length = 2
-    cells = board.eliminate_invalid_columns(length)
     expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3"]
-    actual = cells.map{|cell|cell.coordinates}
+    actual = board.get_invalid_columns(length)
     assert_equal expected, actual
 
     length = 3
-    cells = board.eliminate_invalid_columns(length)
     expected = ["a1", "a2", "b1", "b2", "c1", "c2", "d1", "d2"]
-    actual = cells.map{|cell|cell.coordinates}
+    actual = board.get_invalid_columns(length)
     assert_equal expected, actual
   end
 
-  def test_it_eliminates_edge_rows_from_valid_ship_locations
+  def test_it_returns_coordinates_of_edge_rows_invalid_for_ship_placement
     board = Board.new("Player")
     board.create_grid
     length = 2
-    cells = board.eliminate_invalid_rows(length)
     expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4", "c1", "c2", "c3", "c4"]
-    actual = cells.map{|cell|cell.coordinates}
+    actual = board.get_invalid_rows(length)
     assert_equal expected, actual
 
     length = 3
-    cells = board.eliminate_invalid_rows(length)
     expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4"]
-    actual = cells.map{|cell|cell.coordinates}
+    actual = board.get_invalid_rows(length)
     assert_equal expected, actual
   end
 
-  def test_it_can_eliminate_invalid_rows_and_columns_from_valid_ship_locations
+  def test_it_returns_coordinates_of_rows_and_columns_invalid_for_ship_placement
     board = Board.new("Player")
     board.create_grid
     length = 2
     direction = "h"
-    cells = board.eliminate_invalid_edges(length, direction)
     expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3"]
-    actual = cells.map{|cell|cell.coordinates}
+    actual = board.get_invalid_edges(length, direction)
     assert_equal expected, actual
 
     length = 3
     direction = "v"
-    cells = board.eliminate_invalid_edges(length, direction)
     expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4"]
-    actual = cells.map{|cell|cell.coordinates}
+    actual = board.get_invalid_edges(length, direction)
     assert_equal expected, actual
 
     length = 3
     direction = "a"
-    cells = board.eliminate_invalid_edges(length, direction)
-    expected = "invalid parameters"
-    assert_equal expected, cells
+    expected = "Invalid parameters"
+    actual = board.get_invalid_edges(length, direction)
+    assert_equal expected, actual
 
     length = 1
     direction = "h"
-    cells = board.eliminate_invalid_edges(length, direction)
-    expected = "invalid parameters"
-    assert_equal expected, cells
+    expected = "Invalid parameters"
+    actual = board.get_invalid_edges(length, direction)
+    assert_equal expected, actual
   end
 
   def test_it_can_eliminate_occupied_cells

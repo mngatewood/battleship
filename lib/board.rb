@@ -59,33 +59,35 @@ class Board
     
   end
 
-  def eliminate_invalid_columns(length)
+  def get_invalid_columns(length)
     all_columns = @cells.map {|cell|cell.coordinates[1]}
     unique_columns = all_columns.uniq.sort
-    valid_columns = unique_columns.reverse.drop(length - 1).reverse
-    valid_cells = @cells.find_all do |cell|
-      valid_columns.any?{|column|column == cell.coordinates[1]}
+    invalid_columns = unique_columns.reverse.drop(length - 1)
+    all_cells = @cells.map{|cell|cell.coordinates}
+    invalid_cells = all_cells.find_all do |cell|
+      invalid_columns.any?{|column|column == cell[1]}
     end
-    return valid_cells
+    return invalid_cells
   end
 
-  def eliminate_invalid_rows(length)
+  def get_invalid_rows(length)
     all_rows = @cells.map {|cell|cell.coordinates[0]}
     unique_rows = all_rows.uniq.sort
-    valid_rows = unique_rows.reverse.drop(length - 1).reverse
-    valid_cells = @cells.find_all do |cell|
-      valid_rows.any?{|row|row == cell.coordinates[0]}
+    invalid_rows = unique_rows.reverse.drop(length - 1)
+    all_cells = @cells.map{|cell|cell.coordinates}
+    invalid_cells = all_cells.find_all do |cell|
+      invalid_rows.any?{|row|row == cell[0]}
     end
-    return valid_cells
+    return invalid_cells
   end
 
-  def eliminate_invalid_edges(length, direction)
+  def get_invalid_edges(length, direction)
     if direction == "h" && length > 1
-      eliminate_invalid_columns(length)
+      get_invalid_columns(length)
     elsif direction == "v" && length > 1
-      eliminate_invalid_rows(length)
+      get_invalid_rows(length)
     else
-      "invalid parameters"
+      "Invalid parameters"
     end
   end
 
@@ -169,6 +171,5 @@ class Board
     end
     return eliminated_coordinates.flatten.sort
   end
-
 
 end
