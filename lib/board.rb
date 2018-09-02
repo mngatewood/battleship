@@ -31,10 +31,19 @@ class Board
   end
 
   def place_ship(ship)
+    if valid_location?(ship)
+      update_cell(ship)
+      @ships << ship
+      return true
+    else
+      return false
+    end
+  end
+
+  def update_cell(ship)
     ship.location.each do |coordinate|
       get_cell(coordinate).occupied = true
     end
-    @ships << ship
   end
 
   def get_cell(coordinates)

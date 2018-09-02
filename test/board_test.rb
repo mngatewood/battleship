@@ -58,7 +58,7 @@ class BoardTest < Minitest::Test
     board = Board.new("Player")
     board.create_grid
     ship = Ship.new("ship_1", ["a1", "a2"])
-    board.place_ship(ship)
+    board.update_cell(ship)
     cell_1 = board.get_cell("a1")
     cell_2 = board.get_cell("a2")
     cell_3 = board.get_cell("a3")
@@ -78,6 +78,20 @@ class BoardTest < Minitest::Test
     refute board.valid_location?(ship_2)
     refute board.valid_location?(ship_3)
     refute board.valid_location?(ship_4)
+  end
+
+  def test_it_does_not_place_ships_out_of_bounds
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["d3", "d4"])
+    ship_2 = Ship.new("ship_2", ["d4", "d5"])
+    ship_3 = Ship.new("ship_3", ["d4", "e4"])
+    ship_4 = Ship.new("ship_4", ["d5", "d6"])
+    assert board.place_ship(ship_1)
+    refute board.place_ship(ship_2)
+    refute board.place_ship(ship_3)
+    refute board.place_ship(ship_4)
+    assert_equal [ship_1], board.ships
   end
 
 end
