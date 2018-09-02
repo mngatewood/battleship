@@ -75,4 +75,14 @@ class Board
     return valid_cells
   end
 
+  def eliminate_invalid_edges(length, direction)
+    if direction == "h"
+      eliminate_invalid_columns(length)
+    elsif direction == "v"
+      eliminate_invalid_rows(length)
+    else
+      "invalid direction"
+    end
+  end
+
 end

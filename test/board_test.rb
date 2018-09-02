@@ -126,4 +126,22 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
   end
 
+  def test_it_can_eliminate_invalid_edge_rows_and_columns
+    board = Board.new("Player")
+    board.create_grid
+    length = 2
+    direction = "h"
+    cells = board.eliminate_invalid_edges(length, direction)
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+
+    length = 3
+    direction = "v"
+    cells = board.eliminate_invalid_edges(length, direction)
+    expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+  end
+
 end
