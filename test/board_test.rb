@@ -186,7 +186,7 @@ class BoardTest < Minitest::Test
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
     length = 2
     expected = ["a1", "a2", "b1", "b2"]
-    actual = board.get_coordinates_above_ships(ship_1.location, length)
+    actual = board.get_coordinates_above_ship(ship_1.location, length)
     assert_equal expected, actual
   end
 
@@ -196,7 +196,7 @@ class BoardTest < Minitest::Test
     ship_1 = Ship.new("ship_1", ["c3", "d3"])
     length = 2
     expected = ["c1", "c2", "d1", "d2"]
-    actual = board.get_coordinates_left_of_ships(ship_1.location, length)
+    actual = board.get_coordinates_left_of_ship(ship_1.location, length)
     assert_equal expected, actual
   end
 
@@ -209,20 +209,20 @@ class BoardTest < Minitest::Test
     ship_4 = Ship.new("ship_4", ["a1", "b2"])
     length_of_new_ship = 2
     expected = ["a1", "a2", "b1", "b2"]
-    actual = board.get_invalid_cells_before_ships(ship_1, length_of_new_ship)
+    actual = board.get_invalid_cells_before_ship(ship_1, length_of_new_ship)
     assert_equal expected, actual
 
     length_of_new_ship = 3
     expected = ["c1", "c2", "d1", "d2"]
-    actual = board.get_invalid_cells_before_ships(ship_2, length_of_new_ship)
+    actual = board.get_invalid_cells_before_ship(ship_2, length_of_new_ship)
     assert_equal expected, actual
 
     expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"]
-    actual = board.get_invalid_cells_before_ships(ship_3, length_of_new_ship)
+    actual = board.get_invalid_cells_before_ship(ship_3, length_of_new_ship)
     assert_equal expected, actual   
 
     expected = "Invalid ship placement"
-    actual = board.get_invalid_cells_before_ships(ship_4, length_of_new_ship)
+    actual = board.get_invalid_cells_before_ship(ship_4, length_of_new_ship)
     assert_equal expected, actual    
   end  
 
@@ -234,24 +234,24 @@ class BoardTest < Minitest::Test
     ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
     ship_4 = Ship.new("ship_4", ["a1", "b2"])
     length_of_new_ship = 2
-    cells = board.eliminate_cells_before_ships(ship_1, length_of_new_ship)
+    cells = board.eliminate_cells_before_ship(ship_1, length_of_new_ship)
     expected = ["a3", "a4", "b3", "b4", "c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
     actual = cells.map{|cell|cell.coordinates}
     assert_equal expected, actual
 
     length_of_new_ship = 3
-    cells = board.eliminate_cells_before_ships(ship_2, length_of_new_ship)
+    cells = board.eliminate_cells_before_ship(ship_2, length_of_new_ship)
     expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4", "c3", "c4", "d3", "d4"]
     actual = cells.map{|cell|cell.coordinates}
     assert_equal expected, actual
 
-    cells = board.eliminate_cells_before_ships(ship_3, length_of_new_ship)
+    cells = board.eliminate_cells_before_ship(ship_3, length_of_new_ship)
     expected = ["a4", "b4", "c4", "d1", "d2", "d3", "d4"]
     actual = cells.map{|cell|cell.coordinates}
     assert_equal expected, actual
 
     expected = "Invalid ship placement"
-    actual = board.eliminate_cells_before_ships(ship_4, length_of_new_ship)
+    actual = board.eliminate_cells_before_ship(ship_4, length_of_new_ship)
     assert_equal expected, actual    
   end  
 
@@ -277,6 +277,21 @@ class BoardTest < Minitest::Test
     assert board.array_identical?(array_2)
     refute board.array_identical?(array_3)
     refute board.array_identical?(array_4)
+  end
+
+  def test_it_can_eliminate_invalid_cells_before_all_ships
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    board.place_ship(ship_3)
+    length_of_new_ship = 2
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2"]
+    actual = board.get_invalid_cells_before_all_ships(length_of_new_ship)
+    assert_equal expected, actual
   end
 
 end

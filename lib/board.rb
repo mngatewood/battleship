@@ -55,6 +55,10 @@ class Board
     (ship.location - cell_coordinates).empty?
   end
 
+  def eliminate_all_invalid_cells()
+    
+  end
+
   def eliminate_invalid_columns(length)
     all_columns = @cells.map {|cell|cell.coordinates[1]}
     unique_columns = all_columns.uniq.sort
@@ -89,8 +93,16 @@ class Board
     @cells.find_all{|cell|!cell.occupied}
   end
 
-  def eliminate_cells_before_ships(ship, length_of_new_ship)
-    invalid_cells = get_invalid_cells_before_ships(ship, length_of_new_ship)
+  def get_invalid_cells_before_all_ships(length_of_new_ship)
+    invalid_cells = []
+    @ships.each do |ship|
+      invalid_cells << get_invalid_cells_before_ship(ship, length_of_new_ship)
+    end
+    return invalid_cells.flatten.uniq.sort
+  end
+
+  def eliminate_cells_before_ship(ship, length_of_new_ship)
+    invalid_cells = get_invalid_cells_before_ship(ship, length_of_new_ship)
     if invalid_cells == "Invalid ship placement"
       return "Invalid ship placement"
     else
@@ -102,11 +114,11 @@ class Board
     end
   end
 
-  def get_invalid_cells_before_ships(ship, length)
+  def get_invalid_cells_before_ship(ship, length)
     if determine_ship_direction(ship) == "h"
-      return get_coordinates_above_ships(ship.location, length)
+      return get_coordinates_above_ship(ship.location, length)
     elsif determine_ship_direction(ship) == "v"
-      return get_coordinates_left_of_ships(ship.location, length)
+      return get_coordinates_left_of_ship(ship.location, length)
     else
       return "Invalid ship placement"
     end
@@ -115,9 +127,9 @@ class Board
   def determine_ship_direction(ship)
     rows = ship.location.map{|coordinate|coordinate[0]}
     columns = ship.location.map{|coordinate|coordinate[1]}
-    if columns.all?{|column|column == columns[0]}
+    if array_identical?(columns) && array_incremental?(rows)
       return "v"
-    elsif rows.all?{|row|row == rows[0]}
+    elsif array_identical?(rows) && array_incremental?(columns)
       return "h"
     else
       return "Invalid ship location"
@@ -132,7 +144,7 @@ class Board
     array.all?{|element|element == array[0]}
   end
 
-  def get_coordinates_above_ships(location, length)
+  def get_coordinates_above_ship(location, length)
     eliminated_coordinates = []
     while length > 0 && location[0][0] != "a"
       invalid_coordinates = location.map do |coordinate|
@@ -145,7 +157,7 @@ class Board
     return eliminated_coordinates.flatten.sort
   end
 
-  def get_coordinates_left_of_ships(location, length)
+  def get_coordinates_left_of_ship(location, length)
     eliminated_coordinates = []
     while length > 0 && location[0][1] != "1"
       invalid_coordinates = location.map do |coordinate|
