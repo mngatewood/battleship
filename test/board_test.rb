@@ -255,4 +255,28 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual    
   end  
 
+  def test_it_returns_true_if_array_elements_are_incremental
+    board = Board.new("Player")
+    array_1 = ["a", "b", "c"]
+    array_2 = ["1", "2", "3"]
+    array_3 = ["a", "c", "b"]
+    array_4 = ["3", "2", "1"]
+    assert board.array_incremental?(array_1)
+    assert board.array_incremental?(array_2)
+    refute board.array_incremental?(array_3)
+    refute board.array_incremental?(array_4)
+  end
+
+  def test_it_returns_true_if_array_elements_are_identical
+    board = Board.new("Player")
+    array_1 = ["a", "a", "a"]
+    array_2 = ["2", "2", "2"]
+    array_3 = ["a", "a", "b"]
+    array_4 = ["3", "2", "1"]
+    assert board.array_identical?(array_1)
+    assert board.array_identical?(array_2)
+    refute board.array_identical?(array_3)
+    refute board.array_identical?(array_4)
+  end
+
 end

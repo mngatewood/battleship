@@ -124,6 +124,14 @@ class Board
     end
   end
 
+  def array_incremental?(array)
+    array.each_cons(2).all? {|x,y|y.ord == x.ord + 1}
+  end
+
+  def array_identical?(array)
+    array.all?{|element|element == array[0]}
+  end
+
   def get_coordinates_above_ships(location, length)
     eliminated_coordinates = []
     while length > 0 && location[0][0] != "a"
