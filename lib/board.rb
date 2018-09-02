@@ -55,4 +55,24 @@ class Board
     (ship.location - cell_coordinates).empty?
   end
 
+  def eliminate_invalid_columns(length)
+    all_columns = @cells.map {|cell|cell.coordinates[1]}
+    unique_columns = all_columns.uniq.sort
+    valid_columns = unique_columns.reverse.drop(length - 1).reverse
+    valid_cells = @cells.find_all do |cell|
+      valid_columns.any?{|column|column == cell.coordinates[1]}
+    end
+    return valid_cells
+  end
+
+  def eliminate_invalid_rows(length)
+    all_rows = @cells.map {|cell|cell.coordinates[0]}
+    unique_rows = all_rows.uniq.sort
+    valid_rows = unique_rows.reverse.drop(length - 1).reverse
+    valid_cells = @cells.find_all do |cell|
+      valid_rows.any?{|row|row == cell.coordinates[0]}
+    end
+    return valid_cells
+  end
+
 end

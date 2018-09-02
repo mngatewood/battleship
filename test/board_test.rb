@@ -94,4 +94,36 @@ class BoardTest < Minitest::Test
     assert_equal [ship_1], board.ships
   end
 
+  def test_it_eliminates_edge_columns_from_valid_ship_locations
+    board = Board.new("Player")
+    board.create_grid
+    length = 2
+    cells = board.eliminate_invalid_columns(length)
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+
+    length = 3
+    cells = board.eliminate_invalid_columns(length)
+    expected = ["a1", "a2", "b1", "b2", "c1", "c2", "d1", "d2"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+  end
+
+  def test_it_eliminates_edge_rows_from_valid_ship_locations
+    board = Board.new("Player")
+    board.create_grid
+    length = 2
+    cells = board.eliminate_invalid_rows(length)
+    expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4", "c1", "c2", "c3", "c4"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+
+    length = 3
+    cells = board.eliminate_invalid_rows(length)
+    expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+  end
+
 end
