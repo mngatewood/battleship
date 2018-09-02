@@ -169,28 +169,90 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
   end
 
+  def test_it_can_determine_a_ships_direction
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["a2", "a3"])
+    ship_2 = Ship.new("ship_2", ["b2", "c2", "d2"])
+    ship_3 = Ship.new("ship_3", ["b2", "c3", "d4"])
+    assert_equal "h", board.determine_ship_direction(ship_1)
+    assert_equal "v", board.determine_ship_direction(ship_2)
+    assert_equal "Invalid ship location", board.determine_ship_direction(ship_3)
+  end
+
   def test_it_can_return_coordinates_above_an_existing_horizontal_ship
     board = Board.new("Player")
     board.create_grid
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    board.place_ship(ship_1)
     length = 2
     expected = ["a1", "a2", "b1", "b2"]
     actual = board.get_coordinates_above_ships(ship_1.location, length)
     assert_equal expected, actual
-
   end
 
-  def test_can_eliminate_cells_above_an_existing_horizontal_ship
+  def test_it_can_return_coordinates_left_of_an_existing_vertical_ship
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["b1", "b2"])
-    board.place_ship(ship_1)
+    ship_1 = Ship.new("ship_1", ["c3", "d3"])
+    length = 2
+    expected = ["c1", "c2", "d1", "d2"]
+    actual = board.get_coordinates_left_of_ships(ship_1.location, length)
+    assert_equal expected, actual
+  end
+
+  def test_can_return_invalid_cells_before_an_existing_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    ship_4 = Ship.new("ship_4", ["a1", "b2"])
     length_of_new_ship = 2
-    cells = board.eliminate_cells_above_ships(ship_1, length_of_new_ship)
-    expected = ["a3", "a4", "b1", "b2", "b3", "b4", "c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
+    expected = ["a1", "a2", "b1", "b2"]
+    actual = board.get_invalid_cells_before_ships(ship_1, length_of_new_ship)
+    assert_equal expected, actual
+
+    length_of_new_ship = 3
+    expected = ["c1", "c2", "d1", "d2"]
+    actual = board.get_invalid_cells_before_ships(ship_2, length_of_new_ship)
+    assert_equal expected, actual
+
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"]
+    actual = board.get_invalid_cells_before_ships(ship_3, length_of_new_ship)
+    assert_equal expected, actual   
+
+    expected = "Invalid ship placement"
+    actual = board.get_invalid_cells_before_ships(ship_4, length_of_new_ship)
+    assert_equal expected, actual    
+  end  
+
+  def test_can_eliminate_cells_before_an_existing_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    ship_4 = Ship.new("ship_4", ["a1", "b2"])
+    length_of_new_ship = 2
+    cells = board.eliminate_cells_before_ships(ship_1, length_of_new_ship)
+    expected = ["a3", "a4", "b3", "b4", "c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
     actual = cells.map{|cell|cell.coordinates}
     assert_equal expected, actual
+
+    length_of_new_ship = 3
+    cells = board.eliminate_cells_before_ships(ship_2, length_of_new_ship)
+    expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4", "c3", "c4", "d3", "d4"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+
+    cells = board.eliminate_cells_before_ships(ship_3, length_of_new_ship)
+    expected = ["a4", "b4", "c4", "d1", "d2", "d3", "d4"]
+    actual = cells.map{|cell|cell.coordinates}
+    assert_equal expected, actual
+
+    expected = "Invalid ship placement"
+    actual = board.eliminate_cells_before_ships(ship_4, length_of_new_ship)
+    assert_equal expected, actual    
   end  
 
 end
