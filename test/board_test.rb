@@ -67,17 +67,54 @@ class BoardTest < Minitest::Test
     refute cell_3.occupied
   end
 
-  def test_it_knows_if_a_ship_is_out_of_bounds
+  def test_it_returns_out_of_bounds_cells_if_a_ship_is_out_of_bounds
     board = Board.new("Player")
     board.create_grid
     ship_1 = Ship.new("ship_1", ["d3", "d4"])
     ship_2 = Ship.new("ship_2", ["d4", "d5"])
-    ship_3 = Ship.new("ship_3", ["d4", "e4"])
+    ship_3 = Ship.new("ship_3", ["c4", "d4", "e4"])
     ship_4 = Ship.new("ship_4", ["d5", "d6"])
-    assert board.valid_location?(ship_1)
-    refute board.valid_location?(ship_2)
-    refute board.valid_location?(ship_3)
-    refute board.valid_location?(ship_4)
+    assert_equal "", board.out_of_bounds_cells(ship_1)
+    assert_equal "d5", board.out_of_bounds_cells(ship_2)
+    assert_equal "e4", board.out_of_bounds_cells(ship_3)
+    assert_equal "d5, d6", board.out_of_bounds_cells(ship_4)
+  end
+
+  def test_it_returns_occupied_cells_if_a_ship_is_placed_on_another_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["d3", "d4"])
+    ship_2 = Ship.new("ship_2", ["c4", "d4"])
+    ship_3 = Ship.new("ship_3", ["b3", "c3", "d3"])
+    ship_4 = Ship.new("ship_4", ["d2", "d3"])
+    assert_equal "", board.occupied_cells(ship_1)
+    
+    board.place_ship(ship_1)
+    assert_equal "d4", board.occupied_cells(ship_2)
+    assert_equal "d3", board.occupied_cells(ship_3)
+    assert_equal "d3", board.occupied_cells(ship_4)
+  end
+
+  def test_it_returns_an_error_if_ship_placement_is_invalid
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["d4", "d5"])
+    ship_2 = Ship.new("ship_2", ["d3", "d4"])
+    ship_3 = Ship.new("ship_3", ["b3", "c3", "d3"])
+    ship_4 = Ship.new("ship_4", ["b2", "c2", "d2"])
+    expected = "Error.  Cell(s) d5 is out of bounds."
+    assert_equal expected, board.place_ship(ship_1)
+    assert_equal [], board.ships
+
+    assert_equal "Success.", board.place_ship(ship_2)
+    assert_equal [ship_2], board.ships
+
+    expected = "Error.  Cell(s) d3 is occupied."
+    assert_equal expected, board.place_ship(ship_3)
+    assert_equal [ship_2], board.ships
+
+    assert_equal "Success.", board.place_ship(ship_4)
+    assert_equal [ship_2, ship_4], board.ships
   end
 
   def test_it_does_not_place_ships_out_of_bounds
@@ -87,10 +124,10 @@ class BoardTest < Minitest::Test
     ship_2 = Ship.new("ship_2", ["d4", "d5"])
     ship_3 = Ship.new("ship_3", ["d4", "e4"])
     ship_4 = Ship.new("ship_4", ["d5", "d6"])
-    assert board.place_ship(ship_1)
-    refute board.place_ship(ship_2)
-    refute board.place_ship(ship_3)
-    refute board.place_ship(ship_4)
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    assert_equal [ship_1], board.ships
+    assert_equal [ship_1], board.ships
     assert_equal [ship_1], board.ships
   end
 
