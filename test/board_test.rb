@@ -94,4 +94,218 @@ class BoardTest < Minitest::Test
     assert_equal [ship_1], board.ships
   end
 
+  def test_it_returns_coordinates_of_edge_columns_invalid_for_ship_placement
+    board = Board.new("Player")
+    board.create_grid
+    length = 2
+    expected = ["a4", "b4", "c4", "d4"]
+    actual = board.get_invalid_columns(length)
+    assert_equal expected, actual
+
+    length = 3
+    expected = ["a3", "a4", "b3", "b4", "c3", "c4", "d3", "d4"]
+    actual = board.get_invalid_columns(length)
+    assert_equal expected, actual
+  end
+
+  def test_it_returns_coordinates_of_edge_rows_invalid_for_ship_placement
+    board = Board.new("Player")
+    board.create_grid
+    length = 2
+    expected = ["d1", "d2", "d3", "d4"]
+    actual = board.get_invalid_rows(length)
+    assert_equal expected, actual
+
+    length = 3
+    expected = ["c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
+    actual = board.get_invalid_rows(length)
+    assert_equal expected, actual
+  end
+
+  def test_it_returns_coordinates_of_rows_and_columns_invalid_for_ship_placement
+    board = Board.new("Player")
+    board.create_grid
+    length = 2
+    direction = "h"
+    expected = ["a4", "b4", "c4", "d4"]
+    actual = board.get_invalid_edges(length, direction)
+    assert_equal expected, actual
+
+    length = 3
+    direction = "v"
+    expected = ["c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
+    actual = board.get_invalid_edges(length, direction)
+    assert_equal expected, actual
+
+    length = 3
+    direction = "a"
+    expected = "Invalid parameters"
+    actual = board.get_invalid_edges(length, direction)
+    assert_equal expected, actual
+
+    length = 1
+    direction = "h"
+    expected = "Invalid parameters"
+    actual = board.get_invalid_edges(length, direction)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_return_occupied_cells
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["a2", "a3"])
+    ship_2 = Ship.new("ship_2", ["b2", "b3"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    expected = ["a2", "a3", "b2", "b3"]
+    actual = board.get_occupied_cells
+    assert_equal expected, actual
+  end
+
+  def test_it_can_determine_a_ships_direction
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["a2", "a3"])
+    ship_2 = Ship.new("ship_2", ["b2", "c2", "d2"])
+    ship_3 = Ship.new("ship_3", ["b2", "c3", "d4"])
+    assert_equal "h", board.get_ship_direction(ship_1)
+    assert_equal "v", board.get_ship_direction(ship_2)
+    assert_equal "Invalid ship location", board.get_ship_direction(ship_3)
+  end
+
+  def test_it_can_return_coordinates_above_an_existing_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    expected = ["b1", "b2"]
+    actual = board.get_coordinates_above_ship(ship_1, ship_2)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_return_coordinates_left_of_an_existing_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c3", "d3"])
+    ship_2 = Ship.new("ship_2", ["c1", "c2"])
+    expected = ["c2", "d2"]
+    actual = board.get_coordinates_left_of_ship(ship_1, ship_2)
+    assert_equal expected, actual
+  end
+
+  def test_can_return_invalid_cells_before_an_existing_ship
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c3", "c4"])
+    ship_2 = Ship.new("ship_2", ["c2", "d2"])
+    ship_3 = Ship.new("ship_3", ["c1", "c2"])
+    ship_4 = Ship.new("ship_4", ["a1", "b1"])
+    ship_5 = Ship.new("ship_5", ["a1", "b1", "c1"])
+    ship_6 = Ship.new("ship_6", ["a1", "b2"])
+    expected = ["b3", "b4"]
+    actual = board.get_invalid_cells_before_ship(ship_1, ship_2)
+    assert_equal expected, actual
+
+    expected = ["c2"]
+    actual = board.get_invalid_cells_before_ship(ship_1, ship_3)
+    assert_equal expected, actual
+
+    expected = ["c1", "d1"]
+    actual = board.get_invalid_cells_before_ship(ship_2, ship_3)
+    assert_equal expected, actual   
+
+    expected = ["b2"]
+    actual = board.get_invalid_cells_before_ship(ship_2, ship_4)
+    assert_equal expected, actual   
+
+    expected = ["a3", "a4", "b3", "b4"]
+    actual = board.get_invalid_cells_before_ship(ship_1, ship_5)
+    assert_equal expected, actual   
+
+    expected = "Invalid ship placement"
+    actual = board.get_invalid_cells_before_ship(ship_1, ship_6)
+    assert_equal expected, actual    
+  end  
+
+  def test_it_returns_true_if_array_elements_are_incremental
+    board = Board.new("Player")
+    array_1 = ["a", "b", "c"]
+    array_2 = ["1", "2", "3"]
+    array_3 = ["a", "c", "b"]
+    array_4 = ["3", "2", "1"]
+    assert board.array_incremental?(array_1)
+    assert board.array_incremental?(array_2)
+    refute board.array_incremental?(array_3)
+    refute board.array_incremental?(array_4)
+  end
+
+  def test_it_returns_true_if_array_elements_are_identical
+    board = Board.new("Player")
+    array_1 = ["a", "a", "a"]
+    array_2 = ["2", "2", "2"]
+    array_3 = ["a", "a", "b"]
+    array_4 = ["3", "2", "1"]
+    assert board.array_identical?(array_1)
+    assert board.array_identical?(array_2)
+    refute board.array_identical?(array_3)
+    refute board.array_identical?(array_4)
+  end
+
+  def test_it_can_return_invalid_cells_before_all_ships
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    board.place_ship(ship_1)
+    expected = ["b1", "b2"]
+    actual = board.get_invalid_cells_before_all_ships(ship_2)
+    assert_equal expected, actual
+
+    board.place_ship(ship_2)
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3"]
+    actual = board.get_invalid_cells_before_all_ships(ship_3)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_return_all_invalid_cells
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    ship_4 = Ship.new("ship_4", ["a1", "a2"])    
+    expected = ["a4", "b4", "c4", "d4"]
+    actual = board.get_all_invalid_cells(ship_1)
+    assert_equal expected, actual
+
+    board.place_ship(ship_1)
+    expected = ["b1", "b2", "c1", "c2", "d1", "d2", "d3", "d4"]
+    actual = board.get_all_invalid_cells(ship_2)
+    assert_equal expected, actual
+
+    board.place_ship(ship_2)
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
+    actual = board.get_all_invalid_cells(ship_3)
+    assert_equal expected, actual
+
+    board.place_ship(ship_3)
+    expected = ["a3", "a4", "b3", "b4", "c1", "c2", "c3", "c4", "d2", "d3", "d4"]
+    actual = board.get_all_invalid_cells(ship_4)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_return_all_valid_cells
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    expected = ["a4", "b4"]
+    actual = board.get_all_valid_cells(ship_3)
+    assert_equal expected, actual
+  end
+
 end
