@@ -19,4 +19,9 @@ class CellTest < Minitest::Test
     refute cell.occupied
   end
 
+  def test_it_starts_empty_with_no_strikes
+    cell = Cell.new("a1")
+    refute cell.strike
+  end
+
 end
