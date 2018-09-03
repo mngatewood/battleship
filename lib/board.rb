@@ -60,7 +60,7 @@ class Board
     direction = get_ship_direction(ship)
     invalid_edges = get_invalid_edges(length, direction)
     occupied_cells = get_occupied_cells
-    cells_before_ships = get_invalid_cells_before_all_ships(length)
+    cells_before_ships = get_invalid_cells_before_all_ships(ship)
     # combine occupied_cells and cell_before_ships
     invalid_cells = invalid_edges + occupied_cells + cells_before_ships
     return invalid_cells.flatten.uniq.sort
@@ -69,7 +69,7 @@ class Board
   def get_invalid_columns(length)
     all_columns = @cells.map {|cell|cell.coordinates[1]}
     unique_columns = all_columns.uniq.sort
-    invalid_columns = unique_columns.reverse.drop(length - 1)
+    invalid_columns = unique_columns.reverse.take(length - 1)
     all_cells = @cells.map{|cell|cell.coordinates}
     invalid_cells = all_cells.find_all do |cell|
       invalid_columns.any?{|column|column == cell[1]}
@@ -80,7 +80,7 @@ class Board
   def get_invalid_rows(length)
     all_rows = @cells.map {|cell|cell.coordinates[0]}
     unique_rows = all_rows.uniq.sort
-    invalid_rows = unique_rows.reverse.drop(length - 1)
+    invalid_rows = unique_rows.reverse.take(length - 1)
     all_cells = @cells.map{|cell|cell.coordinates}
     invalid_cells = all_cells.find_all do |cell|
       invalid_rows.any?{|row|row == cell[0]}
@@ -110,19 +110,6 @@ class Board
     end
     return invalid_cells.flatten.uniq.sort
   end
-
-  # def eliminate_cells_before_ship(ship, length_of_new_ship)
-  #   invalid_cells = get_invalid_cells_before_ship(ship, length_of_new_ship)
-  #   if invalid_cells == "Invalid ship placement"
-  #     return "Invalid ship placement"
-  #   else
-  #     @cells.find_all do |cell|
-  #       invalid_cells.none? do |coordinate|
-  #         coordinate == cell.coordinates
-  #       end
-  #     end
-  #   end
-  # end
 
   def get_invalid_cells_before_ship(existing_ship, new_ship)
     if get_ship_direction(new_ship) == "h"
@@ -170,7 +157,7 @@ class Board
       !existing_ship.location.include?(coordinate)
       end.sort
   end
-
+# combine above and below methods
   def get_coordinates_left_of_ship(existing_ship, new_ship)
     location = existing_ship.location
     length = new_ship.location.length
