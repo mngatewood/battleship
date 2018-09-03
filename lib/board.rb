@@ -234,7 +234,7 @@ class Board
     end
   end
 
-  def player_cell_value(cell) #untested
+  def player_cell_value(cell)
     if !cell.strike && !cell.occupied
       return " "
     elsif !cell.strike

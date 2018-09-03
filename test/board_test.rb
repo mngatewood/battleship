@@ -347,4 +347,18 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
   end
 
+  def test_it_can_get_the_print_value_of_a_player_cell
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    cell = board.get_cell("c1")
+    assert_equal " ", board.player_cell_value(cell)
+
+    board.place_ship(ship_1)
+    assert_equal "S", board.player_cell_value(cell)
+
+    cell.strike = "H"
+    assert_equal "H", board.player_cell_value(cell)
+  end
+
 end
