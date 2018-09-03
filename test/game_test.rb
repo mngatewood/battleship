@@ -72,4 +72,12 @@ class GameTest < Minitest::Test
     assert_equal expected, actual
   end
 
+  def test_it_knows_if_coordinates_are_valid
+    game = Game.new
+    game.create_computer_board
+    board = game.boards[0]
+    assert game.valid_coordinate?(board, "a1")
+    refute game.valid_coordinate?(board, "a5")
+  end
+
 end
