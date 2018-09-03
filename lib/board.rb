@@ -226,7 +226,7 @@ class Board
     end
   end
 
-  def get_cell_value(cell) #untested
+  def get_cell_value(cell)
     if @name == "Player"
       return player_cell_value(cell)
     elsif @name == "Computer"
@@ -244,7 +244,7 @@ class Board
     end
   end
 
-  def computer_cell_value(cell) #untested
+  def computer_cell_value(cell)
     if !cell.strike
       return " "
     else

@@ -375,4 +375,26 @@ class BoardTest < Minitest::Test
     assert_equal "M", board.computer_cell_value(cell)
   end
 
+  def test_it_can_get_the_print_value_of_a_player_or_computer_cell
+    computer_board = Board.new("Computer")
+    player_board = Board.new("Player")
+    computer_board.create_grid
+    player_board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    computer_cell = computer_board.get_cell("c1")
+    player_cell = player_board.get_cell("c1")
+    assert_equal " ", computer_board.get_cell_value(computer_cell)
+    assert_equal " ", player_board.get_cell_value(player_cell)
+
+    computer_board.place_ship(ship_1)
+    player_board.place_ship(ship_1)
+    assert_equal " ", computer_board.get_cell_value(computer_cell)
+    assert_equal "S", player_board.get_cell_value(player_cell)
+
+    computer_cell.strike = "H"
+    player_cell.strike = "H"
+    assert_equal "H", computer_board.get_cell_value(computer_cell)
+    assert_equal "H", player_board.get_cell_value(player_cell)
+  end
+
 end
