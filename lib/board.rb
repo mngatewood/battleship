@@ -31,12 +31,12 @@ class Board
   end
 
   def place_ship(ship)
-    if valid_location?(ship)
+    if validate_location(ship) == "Success."
       update_cell(ship)
       @ships << ship
-      return true
+      return "Success."
     else
-      return false
+      return validate_location(ship)
     end
   end
 
@@ -50,9 +50,25 @@ class Board
     @cells.find{|cell|cell.coordinates == coordinates}
   end
 
-  def valid_location?(ship)
-    cell_coordinates = @cells.map{|cell|cell.coordinates}
-    (ship.location - cell_coordinates).empty?
+  def validate_location(ship)
+    if out_of_bounds_cells(ship) != ""
+      return "Error.  Cell(s) #{out_of_bounds_cells(ship)} is out of bounds."
+    elsif occupied_cells(ship) != ""
+      return "Error.  Cell(s) #{occupied_cells(ship)} is occupied."
+    else
+      "Success."
+    end
+  end
+
+  def occupied_cells(ship)
+    unoccupied_cells = @cells.find_all{|cell|!cell.occupied}
+    unoccupied_cell_coordinates = unoccupied_cells.map{|cell|cell.coordinates}
+    return (ship.location - unoccupied_cell_coordinates).join(", ")
+  end
+
+  def out_of_bounds_cells(ship)
+    in_bound_cells_coordinates = @cells.map{|cell|cell.coordinates}
+    return (ship.location - in_bound_cells_coordinates).join(", ")
   end
 
   def get_all_valid_cells(ship)
