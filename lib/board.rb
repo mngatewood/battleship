@@ -199,11 +199,22 @@ class Board
       end.sort
   end
 
-  def render_board
+  def render_board #untested
     render_board_heading
     rows = @cells.map {|cell|cell.coordinates[0]}.uniq.sort
     columns = @cells.map {|cell|cell.coordinates[1]}.uniq.sort
-    rendered_rows = rows.each do |row|
+    get_board_rows(rows, columns)
+    puts ""
+  end
+
+  def render_board_heading #untested
+    puts "       #{@name.upcase}       "
+    puts "--------------------"
+    puts "   | 1 | 2 | 3 | 4 |"
+  end
+
+  def get_board_rows(rows, columns) #untested
+    rows.each do |row|
       print " #{row.upcase} |"
       columns.each do |column|
         value = get_cell_value(cells.find do |cell|
@@ -213,16 +224,9 @@ class Board
       end
       print "\n"
     end
-    puts ""
   end
 
-  def render_board_heading
-    puts "       #{@name.upcase}       "
-    puts "--------------------"
-    puts "   | 1 | 2 | 3 | 4 |"
-  end
-
-  def get_cell_value(cell)
+  def get_cell_value(cell) #untested
     if @name == "Player"
       return player_cell_value(cell)
     elsif @name == "Computer"
@@ -230,7 +234,7 @@ class Board
     end
   end
 
-  def player_cell_value(cell)
+  def player_cell_value(cell) #untested
     if !cell.strike && !cell.occupied
       return " "
     elsif !cell.strike
@@ -240,7 +244,7 @@ class Board
     end
   end
 
-  def computer_cell_value(cell)
+  def computer_cell_value(cell) #untested
     if !cell.strike
       return " "
     else

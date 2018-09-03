@@ -16,14 +16,15 @@ end
 def welcome_menu
   print "Would you like to (p)lay, read the (i)nstructions, or (q)uit? "
   input = gets.chomp.downcase
-  if input == "p"
+  if input == "p" || input == "play"
     setup_game
-  elsif input == "i"
+  elsif input == "i" || input == "instructions"
     display_instructions
-  elsif input == "q"
+  elsif input == "q" || input == "quit"
     exit
   else
-    puts "", "'#{input}' is not a valid input.  Valid inputs are 'p', 'i', and 'q'."
+    puts "", "'#{input}' is not a valid input."
+    puts "Valid inputs are 'p', 'i', 'q', 'play', 'instructions', and 'quit'."
     welcome_menu
   end
 end
@@ -111,6 +112,26 @@ end
 def play_game
   title_screen
   @player_board.render_board
+  player_turn
+end
+
+def player_turn
+  print "Torpedos ready! Enter a coordinate to fire. "
+  input = gets.chomp.downcase
+  shot_result = @game.fire_torpedos(@computer_board, input)
+  if shot_result == "Hit!" or shot_result == "Miss"
+    puts "", shot_result
+    computer_turn
+  else
+    puts "", shot_result, "Please enter a new coordinate."
+    player_turn
+  end
+end
+
+def computer_turn
+  
+  puts "Computer turn."
+  player_turn
 end
 
 start
