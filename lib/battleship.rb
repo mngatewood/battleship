@@ -70,6 +70,8 @@ def place_all_player_ships
   if @player_board.ships.length == 0
     place_player_ship(2, "two")
   elsif @player_board.ships.length == 1
+    title_screen
+    @player_board.render_board
     place_player_ship(3, "three")
   elsif @player_board.ships.length == 2
     play_game
@@ -78,10 +80,12 @@ end
 
 def player_placement_instructions
   title_screen
+  @player_board.render_board
   puts "I have laid out my ships on the grid."
   puts "You now need to layout your two ships."
   puts "The first is two units long and the second is three units long."
   puts "The grid has A1 at the top left and D4 at the bottom right."
+  puts ""
 end
 
 def validate_placement_input(input, length)
@@ -118,7 +122,8 @@ def invalid_placement_warning
 end
 
 def play_game
-  puts "Getting ready to play."
+  title_screen
+  @player_board.render_board
 end
 
 start
