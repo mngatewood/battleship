@@ -280,20 +280,22 @@ class BoardTest < Minitest::Test
     refute board.array_identical?(array_4)
   end
 
-  # def test_it_can_return_invalid_cells_before_all_ships
-  #   board = Board.new("Player")
-  #   board.create_grid
-  #   ship_1 = Ship.new("ship_1", ["c1", "c2"])
-  #   ship_2 = Ship.new("ship_2", ["c3", "d3"])
-  #   ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
-  #   board.place_ship(ship_1)
-  #   board.place_ship(ship_2)
-  #   board.place_ship(ship_3)
-  #   length_of_new_ship = 2
-  #   expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2"]
-  #   actual = board.get_invalid_cells_before_all_ships(length_of_new_ship)
-  #   assert_equal expected, actual
-  # end
+  def test_it_can_return_invalid_cells_before_all_ships
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    board.place_ship(ship_1)
+    expected = ["b1", "b2"]
+    actual = board.get_invalid_cells_before_all_ships(ship_2)
+    assert_equal expected, actual
+
+    board.place_ship(ship_2)
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3"]
+    actual = board.get_invalid_cells_before_all_ships(ship_3)
+    assert_equal expected, actual
+  end
 
   # def test_it_can_get_all_invalid_cells
   #   board = Board.new("Player")
