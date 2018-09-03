@@ -106,14 +106,14 @@ class BoardTest < Minitest::Test
     assert_equal expected, board.place_ship(ship_1)
     assert_equal [], board.ships
 
-    assert_equal "Success.", board.place_ship(ship_2)
+    assert board.place_ship(ship_2)
     assert_equal [ship_2], board.ships
 
     expected = "Error.  Cell(s) d3 is occupied."
     assert_equal expected, board.place_ship(ship_3)
     assert_equal [ship_2], board.ships
 
-    assert_equal "Success.", board.place_ship(ship_4)
+    assert board.place_ship(ship_4)
     assert_equal [ship_2, ship_4], board.ships
   end
 
@@ -126,6 +126,8 @@ class BoardTest < Minitest::Test
     ship_4 = Ship.new("ship_4", ["d5", "d6"])
     board.place_ship(ship_1)
     board.place_ship(ship_2)
+    board.place_ship(ship_3)
+    board.place_ship(ship_4)
     assert_equal [ship_1], board.ships
     assert_equal [ship_1], board.ships
     assert_equal [ship_1], board.ships

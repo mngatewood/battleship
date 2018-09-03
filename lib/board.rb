@@ -31,10 +31,10 @@ class Board
   end
 
   def place_ship(ship)
-    if validate_location(ship) == "Success."
+    if validate_location(ship) == true
       update_cell(ship)
       @ships << ship
-      return "Success."
+      return true
     else
       return validate_location(ship)
     end
@@ -56,7 +56,7 @@ class Board
     elsif occupied_cells(ship) != ""
       return "Error.  Cell(s) #{occupied_cells(ship)} is occupied."
     else
-      "Success."
+      true
     end
   end
 
