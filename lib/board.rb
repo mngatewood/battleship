@@ -199,4 +199,53 @@ class Board
       end.sort
   end
 
+  def render_board
+    render_board_heading
+    rows = @cells.map {|cell|cell.coordinates[0]}.uniq.sort
+    columns = @cells.map {|cell|cell.coordinates[1]}.uniq.sort
+    rendered_rows = rows.each do |row|
+      print " #{row.upcase} |"
+      columns.each do |column|
+        value = get_cell_value(cells.find do |cell|
+          cell.coordinates == row + column
+        end)
+        print " #{value} |"
+      end
+      print "\n"
+    end
+    puts ""
+  end
+
+  def render_board_heading
+    puts "       #{@name.upcase}       "
+    puts "--------------------"
+    puts "   | 1 | 2 | 3 | 4 |"
+  end
+
+  def get_cell_value(cell)
+    if @name == "Player"
+      return player_cell_value(cell)
+    elsif @name == "Computer"
+      return computer_cell_value(cell)
+    end
+  end
+
+  def player_cell_value(cell)
+    if !cell.strike && !cell.occupied
+      return " "
+    elsif !cell.strike
+      return "S"
+    else
+      return cell.strike
+    end
+  end
+
+  def computer_cell_value(cell)
+    if !cell.strike
+      return " "
+    else
+      return cell.strike
+    end
+  end
+
 end
