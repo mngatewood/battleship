@@ -31,10 +31,10 @@ class Board
   end
 
   def place_ship(ship)
-    if validate_location(ship) == "Success."
+    if validate_location(ship) == true
       update_cell(ship)
       @ships << ship
-      return "Success."
+      return true
     else
       return validate_location(ship)
     end
@@ -55,8 +55,10 @@ class Board
       return "Error.  Cell(s) #{out_of_bounds_cells(ship)} is out of bounds."
     elsif occupied_cells(ship) != ""
       return "Error.  Cell(s) #{occupied_cells(ship)} is occupied."
+    elsif get_ship_direction(ship) == "Invalid ship location"
+      return "Error.  Ship coordinates must be adjoining and align horizontally or vertically."
     else
-      "Success."
+      true
     end
   end
 

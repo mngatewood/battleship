@@ -15,6 +15,12 @@ class Game
     computer.create_grid
   end
 
+  def create_player_board
+    player = Board.new("Player")
+    @boards << player
+    player.create_grid
+  end
+
   def place_computer_ship(ship_name, length)
     computer_board = @boards.find{|board|board.name == "Computer"}
     direction = ["h", "v"].sample
