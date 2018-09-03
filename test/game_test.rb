@@ -14,11 +14,19 @@ class GameTest < Minitest::Test
     assert_equal [], game.boards
   end
 
-  def test_it_can_create_a_computer_player_board
+  def test_it_can_create_a_computer_board
     game = Game.new
     game.create_computer_board
     assert_instance_of Board, game.boards[0]
     assert_equal "Computer", game.boards[0].name
+    assert_equal 16, game.boards[0].cells.length
+  end
+
+  def test_it_can_create_a_player_board
+    game = Game.new
+    game.create_player_board
+    assert_instance_of Board, game.boards[0]
+    assert_equal "Player", game.boards[0].name
     assert_equal 16, game.boards[0].cells.length
   end
 
