@@ -55,6 +55,12 @@ class Board
     (ship.location - cell_coordinates).empty?
   end
 
+  def get_all_valid_cells(ship)
+    invalid_cells = get_all_invalid_cells(ship)
+    all_cells = @cells.map{|cell|cell.coordinates}
+    return all_cells - invalid_cells
+  end
+
   def get_all_invalid_cells(ship)
     length = ship.location.length
     direction = get_ship_direction(ship)
@@ -63,7 +69,7 @@ class Board
     cells_before_ships = get_invalid_cells_before_all_ships(ship)
     # combine occupied_cells and cell_before_ships
     invalid_cells = invalid_edges + occupied_cells + cells_before_ships
-    return invalid_cells.flatten.uniq.sort
+    return invalid_cells.uniq.sort
   end
 
   def get_invalid_columns(length)

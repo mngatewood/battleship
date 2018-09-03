@@ -103,7 +103,7 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
 
     length = 3
-    expected = ["a1", "a2", "b1", "b2", "c1", "c2", "d1", "d2"]
+    expected = ["a3", "a4", "b3", "b4", "c3", "c4", "d3", "d4"]
     actual = board.get_invalid_columns(length)
     assert_equal expected, actual
   end
@@ -268,13 +268,13 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
   end
 
-  def test_it_can_get_all_invalid_cells
+  def test_it_can_return_all_invalid_cells
     board = Board.new("Player")
     board.create_grid
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
     ship_2 = Ship.new("ship_2", ["c3", "d3"])
     ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
-    ship_3 = Ship.new("ship_4", ["a1", "a2"])    
+    ship_4 = Ship.new("ship_4", ["a1", "a2"])    
     expected = ["a4", "b4", "c4", "d4"]
     actual = board.get_all_invalid_cells(ship_1)
     assert_equal expected, actual
@@ -290,8 +290,21 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
 
     board.place_ship(ship_3)
-    expected = ["a3", "a4", "b3", "b4", "c3", "c4", "d3", "d4"]
+    expected = ["a3", "a4", "b3", "b4", "c1", "c2", "c3", "c4", "d2", "d3", "d4"]
     actual = board.get_all_invalid_cells(ship_4)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_return_all_valid_cells
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    expected = ["a4", "b4"]
+    actual = board.get_all_valid_cells(ship_3)
     assert_equal expected, actual
   end
 
