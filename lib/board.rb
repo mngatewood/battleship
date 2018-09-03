@@ -216,14 +216,6 @@ class Board
     puts ""
   end
 
-  # puts "       PLAYER                 COMPUTER      "
-  # puts "--------------------    --------------------"
-  # puts "   | 1 | 2 | 3 | 4 |       | 1 | 2 | 3 | 4 |"
-  # puts " A |   |   |   |   |     A |   |   |   |   |"
-  # puts " B |   |   |   |   |     B |   |   |   |   |"
-  # puts " C |   |   |   |   |     C |   |   |   |   |"
-  # puts " D |   |   |   |   |     D |   |   |   |   |"
-
   def render_board_heading
     puts "       #{@name.upcase}       "
     puts "--------------------"

@@ -8,12 +8,9 @@ end
 
 def title_screen
   system "clear" or system "cls"
-  puts "---------------------"
-  puts ""
-  puts "Welcome to BATTLESHIP"
-  puts ""
-  puts "---------------------"
-  puts ""
+  puts "---------------------", ""
+  puts "Welcome to BATTLESHIP", ""
+  puts "---------------------", ""
 end
 
 def welcome_menu
@@ -26,22 +23,16 @@ def welcome_menu
   elsif input == "q"
     exit
   else
-    puts ""
-    puts "'#{input}' is not a valid input.  Valid inputs are 'p', 'i', and 'q'."
+    puts "", "'#{input}' is not a valid input.  Valid inputs are 'p', 'i', and 'q'."
     welcome_menu
   end
 end
 
 def display_instructions
-  puts ""
-  puts "--------------------- "
-  puts ""
-  puts "Summary: Battleship is a classic two player game where players try to sink their opponent’s navy ships."
-  puts ""
-  puts "Object: The basic object of the game of Battleship is to hide your ship fleet somewhere in your ocean and by calling out basic coordinates, find your opponent’s fleet before they find yours."
-  puts ""
-  puts "Victory Condition: To become the winner of Battleship you must be able to find (sink) all ships in your opponent’s fleet before they sink yours."
-  puts ""
+  puts "", "---------------------", ""
+  puts "Summary: Battleship is a classic two player game where players try to sink their opponent’s navy ships.", ""
+  puts "Object: The basic object of the game of Battleship is to hide your ship fleet somewhere in your ocean and by calling out basic coordinates, find your opponent’s fleet before they find yours.", ""
+  puts "Victory Condition: To become the winner of Battleship you must be able to find (sink) all ships in your opponent’s fleet before they sink yours.", ""
   welcome_menu
 end
 
@@ -84,8 +75,7 @@ def player_placement_instructions
   puts "I have laid out my ships on the grid."
   puts "You now need to layout your two ships."
   puts "The first is two units long and the second is three units long."
-  puts "The grid has A1 at the top left and D4 at the bottom right."
-  puts ""
+  puts "The grid has A1 at the top left and D4 at the bottom right.", ""
 end
 
 def validate_placement_input(input, length)
@@ -105,17 +95,14 @@ def place_player_ship(length_number, length_word)
   elsif @player_board.validate_location(ship) == true
     @player_board.place_ship(ship)
   else
-    puts ""
-    puts @player_board.validate_location(ship)
-    puts ""
-    puts "Please enter a valid set of coordinates."
+    puts "", @player_board.validate_location(ship)
+    puts "", "Please enter a valid set of coordinates."
   end
   place_all_player_ships
 end
 
 def invalid_placement_warning
-  puts ""
-  puts "Please enter a valid set of coordinates."
+  puts "", "Please enter a valid set of coordinates."
   puts "For a two-unit ship, an example of a valid input would be a2 a3."
   puts "For a three-unit ship, an example of a valid input would be a2 a3 a4."
   place_all_player_ships
