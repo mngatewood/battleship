@@ -19,4 +19,9 @@ class ShipTest < Minitest::Test
     assert_equal ["a1", "a2"], ship.location
   end
 
+  def test_it_starts_out_afloat
+    ship = Ship.new("ship_1", ["a1", "a2"])
+    refute ship.sunk
+  end
+
 end
