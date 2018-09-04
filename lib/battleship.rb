@@ -13,6 +13,17 @@ def title_screen
   puts "---------------------", ""
 end
 
+def render_player_board_only
+  title_screen
+  @player_board.render_board
+end
+
+def render_game_boards
+  title_screen
+  @computer_board.render_board
+  @player_board.render_board
+end
+
 def welcome_menu
   print "Would you like to (p)lay, read the (i)nstructions, or (q)uit? "
   input = gets.chomp.downcase
@@ -30,11 +41,10 @@ def welcome_menu
 end
 
 def display_instructions
-  puts "", "---------------------", ""
+  title_screen
   puts "Summary: Battleship is a classic two player game where players try to sink their opponent’s navy ships.", ""
   puts "Object: The basic object of the game of Battleship is to hide your ship fleet somewhere in your ocean and by calling out basic coordinates, find your opponent’s fleet before they find yours.", ""
   puts "Victory Condition: To become the winner of Battleship you must be able to find (sink) all ships in your opponent’s fleet before they sink yours.", ""
-  welcome_menu
 end
 
 def setup_game
@@ -55,18 +65,18 @@ def initialize_player
   @game.create_player_board
   @player_board = @game.boards.find{|board|board.name == "Player"}
   player_placement_instructions
+  interrupt
   place_all_player_ships
 end
 
 def place_all_player_ships
+  render_player_board_only
   if @player_board.ships.length == 0
     place_player_ship(2, "two")
   elsif @player_board.ships.length == 1
-    title_screen
-    @player_board.render_board
     place_player_ship(3, "three")
   elsif @player_board.ships.length == 2
-    play_game
+    player_turn
   end
 end
 
@@ -95,68 +105,52 @@ def place_player_ship(length_number, length_word)
     invalid_placement_warning 
   elsif @player_board.validate_location(ship) == true
     @player_board.place_ship(ship)
+    puts "Your ship has been successfully placed.", ""
   else
     puts "", @player_board.validate_location(ship)
-    puts "", "Please enter a valid set of coordinates."
+    puts "Please enter a valid set of coordinates.", ""
   end
+  interrupt
   place_all_player_ships
 end
 
 def invalid_placement_warning
+  render_player_board_only
   puts "", "Please enter a valid set of coordinates."
   puts "For a two-unit ship, an example of a valid input would be a2 a3."
-  puts "For a three-unit ship, an example of a valid input would be a2 a3 a4."
-  place_all_player_ships
+  puts "For a three-unit ship, an example of a valid input would be a2 a3 a4.", ""
 end
 
-def play_game
-  title_screen
-  @player_board.render_board
-  player_turn
+def interrupt
+  print "Press enter to continue. "
+  while input = gets.chomp
+    if input == ""
+      break
+    end
+  end
 end
 
 def player_turn
+  render_game_boards
   print "Torpedos ready! Enter a coordinate to fire. "
   input = gets.chomp.downcase
   shot_result = @game.fire_torpedos(@computer_board, input)
   if shot_result == "Hit!" or shot_result == "Miss"
-    puts "", shot_result, ""
-    end_player_turn
+    render_game_boards
+    puts "", shot_result, "", "Your turn is complete.", ""
+    interrupt
+    computer_turn
   else
     puts "", shot_result, "Please enter a new coordinate."
     player_turn
   end
 end
 
-def end_player_turn
-  @player_board.render_board
-  print "Press enter to end your turn. "
-  input = gets.chomp
-  if input == ""
-    computer_turn
-  else
-    end_player_turn
-  end
-end
-
 def computer_turn
-  title_screen
-  @player_board.render_board
-  puts "Computer turn."
-  end_computer_turn
+  render_game_boards
+  puts "Computer turn is complete.", ""
+  interrupt
+  player_turn
 end
-
-def end_computer_turn
-  @player_board.render_board
-  print "Press enter to begin your turn. "
-  input = gets.chomp
-  if input == ""
-    player_turn
-  else
-    end_computer_turn
-  end
-end
-
-
 
 start
