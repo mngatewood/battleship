@@ -50,4 +50,31 @@ class Game
     end
   end
 
+  def fire_torpedos(board, target_coordinate)
+    if !valid_coordinate?(board, target_coordinate)
+      return "Invalid coordinate"
+    else
+      target_cell = board.get_cell(target_coordinate)
+      shot_result = evaluate_shot(target_cell)
+      return shot_result
+    end
+  end
+
+  def valid_coordinate?(board, target_coordinate)
+    cell_coordinates = board.cells.map{|cell|cell.coordinates}
+    cell_coordinates.include?(target_coordinate)
+  end
+
+  def evaluate_shot(target_cell)
+    if target_cell.strike
+      return "You already fired there."
+    elsif target_cell.occupied
+      target_cell.strike = "H"
+      return "Hit!"
+    else
+      target_cell.strike = "M"
+      return "Miss"
+    end
+  end
+
 end
