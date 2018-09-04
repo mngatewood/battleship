@@ -89,19 +89,11 @@ def player_placement_instructions
   puts "The grid has A1 at the top left and D4 at the bottom right.", ""
 end
 
-def validate_placement_input(input, length)
-  array_length = input.length == length
-  coord_length = input.map{|coordinate|coordinate.chars.length}.uniq == [2]
-  coord_x = input.map{|coordinate|coordinate[1]}.join.count("0-9") == length
-  coord_y = input.map{|coordinate|coordinate[0]}.join.count("a-z") == length
-  return array_length && coord_length && coord_x && coord_y
-end
-
 def place_player_ship(length_number, length_word)
   print "Enter the squares for the #{length_word}-unit ship: "
   input = gets.chomp.downcase.split(" ")
   ship = Ship.new("#{length_word}_unit_ship", input)
-  if !validate_placement_input(input, length_number)
+  if !@player_board.validate_placement_input(input, length_number)
     invalid_placement_warning 
   elsif @player_board.validate_location(ship) == true
     @player_board.place_ship(ship)
@@ -130,7 +122,7 @@ def interrupt
   end
 end
 
-def player_turn
+def player_turn # move to game?
   render_game_boards
   print "Torpedos ready! Enter a coordinate to fire. "
   input = gets.chomp.downcase
@@ -142,15 +134,29 @@ def player_turn
     computer_turn
   else
     puts "", shot_result, "Please enter a new coordinate."
+    interrupt
     player_turn
   end
 end
 
-def computer_turn
+def computer_turn # move to game?
+  target_coordinates = computer_target
+  computer_fire_result = @game.fire_torpedos(@player_board, target_coordinates)
   render_game_boards
+  puts "Computer fired at square #{target_coordinates}.", ""
+  puts computer_fire_result, ""
   puts "Computer turn is complete.", ""
   interrupt
   player_turn
+end
+
+def computer_target
+  all_cell_coordinates = @player_board.cells.map{|cell|cell.coordinates}
+  fired_cells = @player_board.cells.find_all{|cell|cell.strike}
+  fired_cells_coordinates = fired_cells.map{|cell|cell.coordinates}
+  valid_target_coordinates = all_cell_coordinates - fired_cells_coordinates
+  target_cell_coordinates = valid_target_coordinates.sample
+  return target_cell_coordinates
 end
 
 start
