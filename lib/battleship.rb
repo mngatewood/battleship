@@ -120,18 +120,43 @@ def player_turn
   input = gets.chomp.downcase
   shot_result = @game.fire_torpedos(@computer_board, input)
   if shot_result == "Hit!" or shot_result == "Miss"
-    puts "", shot_result
-    computer_turn
+    puts "", shot_result, ""
+    end_player_turn
   else
     puts "", shot_result, "Please enter a new coordinate."
     player_turn
   end
 end
 
-def computer_turn
-  
-  puts "Computer turn."
-  player_turn
+def end_player_turn
+  @player_board.render_board
+  print "Press enter to end your turn. "
+  input = gets.chomp
+  if input == ""
+    computer_turn
+  else
+    end_player_turn
+  end
 end
+
+def computer_turn
+  title_screen
+  @player_board.render_board
+  puts "Computer turn."
+  end_computer_turn
+end
+
+def end_computer_turn
+  @player_board.render_board
+  print "Press enter to begin your turn. "
+  input = gets.chomp
+  if input == ""
+    player_turn
+  else
+    end_computer_turn
+  end
+end
+
+
 
 start
