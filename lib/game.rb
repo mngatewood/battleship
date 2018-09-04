@@ -50,7 +50,7 @@ class Game
     end
   end
 
-  def fire_torpedos(board, target_coordinate) #untested
+  def fire_torpedos(board, target_coordinate)
     if !valid_coordinate?(board, target_coordinate)
       return "Invalid coordinate"
     else

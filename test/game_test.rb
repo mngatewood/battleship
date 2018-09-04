@@ -96,4 +96,28 @@ class GameTest < Minitest::Test
     assert_equal "You already fired there.", game.evaluate_shot(target_cell)
   end
 
+  def test_it_can_fire_torpedos
+    game = Game.new
+    game.create_computer_board
+    game.create_player_board
+    player_board = game.boards.find{|board|board.name == "Player"}
+    computer_board = game.boards.find{|board|board.name == "Computer"}
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["c1", "d1"])
+    player_board.place_ship(ship_1)
+    computer_board.place_ship(ship_2)
+    actual = game.fire_torpedos(computer_board, "a5")
+    assert_equal "Invalid coordinate", actual
+
+    actual = game.fire_torpedos(player_board, "d1")
+    assert_equal "Miss", actual
+  
+    actual = game.fire_torpedos(player_board, "d1")
+    assert_equal "You already fired there.", actual
+
+    actual = game.fire_torpedos(computer_board, "d1")
+    assert_equal "Hit!", actual
+  end
+
+
 end
