@@ -9,16 +9,10 @@ class Game
     @boards = []
   end
 
-  def create_computer_board
-    computer = Board.new("Computer")
-    @boards << computer
-    computer.create_grid
-  end
-
-  def create_player_board
-    player = Board.new("Player")
-    @boards << player
-    player.create_grid
+  def create_board(player)
+    board = Board.new(player)
+    @boards << board
+    board.create_grid
   end
 
   def place_computer_ship(ship_name, length)

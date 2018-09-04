@@ -74,14 +74,14 @@ def setup_game
 end
 
 def initialize_computer
-  @game.create_computer_board
+  @game.create_board("Computer")
   @computer_board = @game.boards.find{|board|board.name == "Computer"}
   @game.place_computer_ship("two_unit_ship", 2)
   @game.place_computer_ship("three_unit_ship", 3)
 end
 
 def initialize_player
-  @game.create_player_board
+  @game.create_board("Player")
   @player_board = @game.boards.find{|board|board.name == "Player"}
   player_placement_instructions
   interrupt
