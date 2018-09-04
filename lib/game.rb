@@ -77,4 +77,11 @@ class Game
     end
   end
 
+  def render_game_boards
+    computer_board = @boards.find{|board|board.name == "Computer"}
+    player_board = @boards.find{|board|board.name == "Player"}
+    computer_board.render_board
+    player_board.render_board
+  end
+
 end

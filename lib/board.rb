@@ -252,4 +252,12 @@ class Board
     end
   end
 
+  def validate_placement_input(input, length)
+    array_length = input.length == length
+    coord_length = input.map{|coordinate|coordinate.chars.length}.uniq == [2]
+    coord_x = input.map{|coordinate|coordinate[1]}.join.count("0-9") == length
+    coord_y = input.map{|coordinate|coordinate[0]}.join.count("a-z") == length
+    return array_length && coord_length && coord_x && coord_y
+  end
+
 end
