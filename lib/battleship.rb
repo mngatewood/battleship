@@ -45,6 +45,7 @@ def display_instructions
   puts "Summary: Battleship is a classic two player game where players try to sink their opponent’s navy ships.", ""
   puts "Object: The basic object of the game of Battleship is to hide your ship fleet somewhere in your ocean and by calling out basic coordinates, find your opponent’s fleet before they find yours.", ""
   puts "Victory Condition: To become the winner of Battleship you must be able to find (sink) all ships in your opponent’s fleet before they sink yours.", ""
+  welcome_menu
 end
 
 def setup_game
