@@ -128,9 +128,13 @@ def player_turn # move to game?
   print "Torpedos ready! Enter a coordinate to fire. "
   input = gets.chomp.downcase
   shot_result = @game.fire_torpedos(@computer_board, input)
-  if shot_result == "Hit!" or shot_result == "Miss"
+  if shot_result != "Invalid coordinate"
     render_game_boards
-    puts "", shot_result, "", "Your turn is complete.", ""
+    puts "", shot_result, ""
+    if @game.victory?(@computer_board)
+      victory_end_game
+    end
+    puts "Your turn is complete.", ""
     interrupt
     computer_turn
   else
@@ -140,12 +144,27 @@ def player_turn # move to game?
   end
 end
 
+def victory_end_game
+  puts "You have sunk all of the computer's ships!"
+  puts "You are victorious!"
+  interrupt
+  start
+end
+
+def defeat_end_game
+  puts "The computer has sunk all of your ships!"
+  puts "You have lost the battle"
+  interrupt
+  start
+end
+
 def computer_turn # move to game?
   target_coordinates = computer_target
   computer_fire_result = @game.fire_torpedos(@player_board, target_coordinates)
   render_game_boards
   puts "Computer fired at square #{target_coordinates}.", ""
   puts computer_fire_result, ""
+  victory_end_game if @game.victory?(@player_board)
   puts "Computer turn is complete.", ""
   interrupt
   player_turn
