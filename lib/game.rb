@@ -60,12 +60,12 @@ class Game
     end
   end
 
-  def valid_coordinate?(board, target_coordinate) #untested
+  def valid_coordinate?(board, target_coordinate)
     cell_coordinates = board.cells.map{|cell|cell.coordinates}
     cell_coordinates.include?(target_coordinate)
   end
 
-  def evaluate_shot(target_cell) #untested
+  def evaluate_shot(target_cell)
     if target_cell.strike
       return "You already fired there."
     elsif target_cell.occupied

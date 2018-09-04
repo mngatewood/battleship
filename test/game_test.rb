@@ -80,4 +80,20 @@ class GameTest < Minitest::Test
     refute game.valid_coordinate?(board, "a5")
   end
 
+  def test_it_can_evaluate_a_shot
+    game = Game.new
+    game.create_computer_board
+    board = game.boards[0]
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    board.place_ship(ship_1)
+    target_cell = board.get_cell("a1")
+    assert_equal "Miss", game.evaluate_shot(target_cell)
+
+    target_cell = board.get_cell("c1")    
+    assert_equal "Hit!", game.evaluate_shot(target_cell)
+
+    target_cell = board.get_cell("a1")
+    assert_equal "You already fired there.", game.evaluate_shot(target_cell)
+  end
+
 end
