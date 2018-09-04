@@ -55,7 +55,7 @@ class Game
       return "Invalid coordinate"
     else
       target_cell = board.get_cell(target_coordinate)
-      shot_result = evaluate_shot(target_cell)
+      shot_result = evaluate_shot(board, target_cell)
       return shot_result
     end
   end
@@ -65,12 +65,12 @@ class Game
     cell_coordinates.include?(target_coordinate)
   end
 
-  def evaluate_shot(target_cell)
+  def evaluate_shot(board, target_cell)
     if target_cell.strike
       return "You already fired there."
     elsif target_cell.occupied
       target_cell.strike = "H"
-      return "Hit!"
+      return evaluate_ship_status(board, target_cell.coordinates)
     else
       target_cell.strike = "M"
       return "Miss"
@@ -82,6 +82,17 @@ class Game
     player_board = @boards.find{|board|board.name == "Player"}
     computer_board.render_board
     player_board.render_board
+  end
+
+  def evaluate_ship_status(board, coordinate)
+    ship = board.ships.find{|ship|ship.location.include?(coordinate)}
+    strikes = ship.location.map{|coordinate|board.get_cell(coordinate).strike}
+    if strikes.count("H") == ship.location.length
+      ship.sunk = true
+      return "Hit! #{ship.name.capitalize} has been sunk!"
+    else
+      return "Hit!"
+    end
   end
 
 end

@@ -87,13 +87,13 @@ class GameTest < Minitest::Test
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
     board.place_ship(ship_1)
     target_cell = board.get_cell("a1")
-    assert_equal "Miss", game.evaluate_shot(target_cell)
+    assert_equal "Miss", game.evaluate_shot(board, target_cell)
 
     target_cell = board.get_cell("c1")    
-    assert_equal "Hit!", game.evaluate_shot(target_cell)
+    assert_equal "Hit!", game.evaluate_shot(board, target_cell)
 
     target_cell = board.get_cell("a1")
-    assert_equal "You already fired there.", game.evaluate_shot(target_cell)
+    assert_equal "You already fired there.", game.evaluate_shot(board, target_cell)
   end
 
   def test_it_can_fire_torpedos
@@ -119,5 +119,17 @@ class GameTest < Minitest::Test
     assert_equal "Hit!", actual
   end
 
+  def test_it_can_sink_a_ship
+    game = Game.new
+    game.create_computer_board
+    board = game.boards.find{|board|board.name == "Computer"}
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    board.place_ship(ship_1)
+    assert_equal "Hit!", game.fire_torpedos(board, "c1")
+    refute ship_1.sunk
+
+    assert_equal "Hit! Ship_1 has been sunk!", game.fire_torpedos(board, "c2")
+    assert ship_1.sunk
+  end
 
 end
