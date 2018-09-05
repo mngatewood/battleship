@@ -31,7 +31,7 @@ class GameTest < Minitest::Test
     game = Game.new
     game.create_board("Computer")
     board = game.boards[0]
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
     board.place_ship(ship_1)
     target_cell = board.get_cell("a1")
     assert_equal "Miss", game.evaluate_shot(board, target_cell)
@@ -49,8 +49,8 @@ class GameTest < Minitest::Test
     game.create_board("Player")
     player_board = game.boards.find{|board|board.name == "Player"}
     computer_board = game.boards.find{|board|board.name == "Computer"}
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["c1", "d1"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("two_unit_ship", ["c1", "d1"])
     player_board.place_ship(ship_1)
     computer_board.place_ship(ship_2)
     actual = game.fire_torpedos(computer_board, "a5")
@@ -70,12 +70,12 @@ class GameTest < Minitest::Test
     game = Game.new
     game.create_board("Computer")
     computer_board = game.boards.find{|board|board.name == "Computer"}
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
     computer_board.place_ship(ship_1)
     assert_equal "Hit!", game.fire_torpedos(computer_board, "c1")
     refute ship_1.sunk
 
-    assert_equal "Hit! Ship_1 has been sunk!", game.fire_torpedos(computer_board, "c2")
+    assert_equal "Hit! Two_unit_ship has been sunk!", game.fire_torpedos(computer_board, "c2")
     assert ship_1.sunk
   end
 
@@ -98,8 +98,8 @@ class GameTest < Minitest::Test
     game = Game.new
     game.create_board("Computer")
     game.create_board("Player")
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["d1", "d2", "d3"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("three_unit_ship", ["d1", "d2", "d3"])
 
     player_board = game.boards.find{|board|board.name == "Player"}
     player_board.place_ship(ship_1)

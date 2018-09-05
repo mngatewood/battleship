@@ -39,7 +39,7 @@ class BoardTest < Minitest::Test
 
   def test_it_can_place_a_ship
     board = Board.new("Player")
-    ship = Ship.new("ship_1", ["a1", "a2"])
+    ship = Ship.new("two_unit_ship", ["a1", "a2"])
     board.create_grid
     board.place_ship(ship)
     assert_equal [ship], board.ships
@@ -64,7 +64,7 @@ class BoardTest < Minitest::Test
   def test_it_occupies_a_cell_when_placing_a_ship
     board = Board.new("Player")
     board.create_grid
-    ship = Ship.new("ship_1", ["a1", "a2"])
+    ship = Ship.new("two_unit_ship", ["a1", "a2"])
     board.update_cell(ship)
     cell_1 = board.get_cell("a1")
     cell_2 = board.get_cell("a2")
@@ -77,10 +77,10 @@ class BoardTest < Minitest::Test
   def test_it_returns_out_of_bounds_cells_if_a_ship_is_out_of_bounds
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["d3", "d4"])
-    ship_2 = Ship.new("ship_2", ["d4", "d5"])
-    ship_3 = Ship.new("ship_3", ["c4", "d4", "e4"])
-    ship_4 = Ship.new("ship_4", ["d5", "d6"])
+    ship_1 = Ship.new("two_unit_ship", ["d3", "d4"])
+    ship_2 = Ship.new("two_unit_ship", ["d4", "d5"])
+    ship_3 = Ship.new("three_unit_ship", ["c4", "d4", "e4"])
+    ship_4 = Ship.new("two_unit_ship", ["d5", "d6"])
     assert_equal "", board.out_of_bounds_cells(ship_1)
     assert_equal "d5", board.out_of_bounds_cells(ship_2)
     assert_equal "e4", board.out_of_bounds_cells(ship_3)
@@ -90,10 +90,10 @@ class BoardTest < Minitest::Test
   def test_it_returns_occupied_cells_if_a_ship_is_placed_on_another_ship
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["d3", "d4"])
-    ship_2 = Ship.new("ship_2", ["c4", "d4"])
-    ship_3 = Ship.new("ship_3", ["b3", "c3", "d3"])
-    ship_4 = Ship.new("ship_4", ["d2", "d3"])
+    ship_1 = Ship.new("two_unit_ship", ["d3", "d4"])
+    ship_2 = Ship.new("two_unit_ship", ["c4", "d4"])
+    ship_3 = Ship.new("three_unit_ship", ["b3", "c3", "d3"])
+    ship_4 = Ship.new("two_unit_ship", ["d2", "d3"])
     assert_equal "", board.occupied_cells(ship_1)
     
     board.place_ship(ship_1)
@@ -105,11 +105,11 @@ class BoardTest < Minitest::Test
   def test_it_returns_an_error_if_ship_placement_is_invalid
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["d4", "d5"])
-    ship_2 = Ship.new("ship_2", ["d3", "d4"])
-    ship_3 = Ship.new("ship_3", ["b3", "c3", "d3"])
-    ship_4 = Ship.new("ship_4", ["a1", "b2"])
-    ship_5 = Ship.new("ship_5", ["b2", "c2", "d2"])
+    ship_1 = Ship.new("two_unit_ship", ["d4", "d5"])
+    ship_2 = Ship.new("two_unit_ship", ["d3", "d4"])
+    ship_3 = Ship.new("three_unit_ship", ["b3", "c3", "d3"])
+    ship_4 = Ship.new("two_unit_ship", ["a1", "b2"])
+    ship_5 = Ship.new("three_unit_ship", ["b2", "c2", "d2"])
     expected = "Error.  Cell(s) d5 is out of bounds."
     assert_equal expected, board.place_ship(ship_1)
     assert_equal [], board.ships
@@ -132,10 +132,10 @@ class BoardTest < Minitest::Test
   def test_it_does_not_place_ships_out_of_bounds
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["d3", "d4"])
-    ship_2 = Ship.new("ship_2", ["d4", "d5"])
-    ship_3 = Ship.new("ship_3", ["d4", "e4"])
-    ship_4 = Ship.new("ship_4", ["d5", "d6"])
+    ship_1 = Ship.new("two_unit_ship", ["d3", "d4"])
+    ship_2 = Ship.new("two_unit_ship", ["d4", "d5"])
+    ship_3 = Ship.new("two_unit_ship", ["d4", "e4"])
+    ship_4 = Ship.new("two_unit_ship", ["d5", "d6"])
     board.place_ship(ship_1)
     board.place_ship(ship_2)
     board.place_ship(ship_3)
@@ -248,8 +248,8 @@ end
   def test_it_can_return_occupied_cells
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["a2", "a3"])
-    ship_2 = Ship.new("ship_2", ["b2", "b3"])
+    ship_1 = Ship.new("two_unit_ship", ["a2", "a3"])
+    ship_2 = Ship.new("two_unit_ship", ["b2", "b3"])
     board.place_ship(ship_1)
     board.place_ship(ship_2)
     expected = ["a2", "a3", "b2", "b3"]
@@ -260,9 +260,9 @@ end
   def test_it_can_determine_a_ships_direction
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["a2", "a3"])
-    ship_2 = Ship.new("ship_2", ["b2", "c2", "d2"])
-    ship_3 = Ship.new("ship_3", ["b2", "c3", "d4"])
+    ship_1 = Ship.new("two_unit_ship", ["a2", "a3"])
+    ship_2 = Ship.new("three_unit_ship", ["b2", "c2", "d2"])
+    ship_3 = Ship.new("three_unit_ship", ["b2", "c3", "d4"])
     assert_equal "h", board.get_ship_direction(ship_1)
     assert_equal "v", board.get_ship_direction(ship_2)
     assert_equal "Invalid ship location", board.get_ship_direction(ship_3)
@@ -271,8 +271,8 @@ end
   def test_it_can_return_coordinates_above_an_existing_ship
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["c3", "d3"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("two_unit_ship", ["c3", "d3"])
     expected = ["b1", "b2"]
     actual = board.get_coordinates_above_ship(ship_1, ship_2)
     assert_equal expected, actual
@@ -281,8 +281,8 @@ end
   def test_it_can_return_coordinates_left_of_an_existing_ship
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c3", "d3"])
-    ship_2 = Ship.new("ship_2", ["c1", "c2"])
+    ship_1 = Ship.new("two_unit_ship", ["c3", "d3"])
+    ship_2 = Ship.new("two_unit_ship", ["c1", "c2"])
     expected = ["c2", "d2"]
     actual = board.get_coordinates_left_of_ship(ship_1, ship_2)
     assert_equal expected, actual
@@ -291,12 +291,12 @@ end
   def test_can_return_invalid_cells_before_an_existing_ship
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c3", "c4"])
-    ship_2 = Ship.new("ship_2", ["c2", "d2"])
-    ship_3 = Ship.new("ship_3", ["c1", "c2"])
-    ship_4 = Ship.new("ship_4", ["a1", "b1"])
-    ship_5 = Ship.new("ship_5", ["a1", "b1", "c1"])
-    ship_6 = Ship.new("ship_6", ["a1", "b2"])
+    ship_1 = Ship.new("two_unit_ship", ["c3", "c4"])
+    ship_2 = Ship.new("two_unit_ship", ["c2", "d2"])
+    ship_3 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_4 = Ship.new("two_unit_ship", ["a1", "b1"])
+    ship_5 = Ship.new("three_unit_ship", ["a1", "b1", "c1"])
+    ship_6 = Ship.new("two_unit_ship", ["a1", "b2"])
     expected = ["b3", "b4"]
     actual = board.get_invalid_cells_before_ship(ship_1, ship_2)
     assert_equal expected, actual
@@ -349,9 +349,9 @@ end
   def test_it_can_return_invalid_cells_before_all_ships
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["c3", "d3"])
-    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("two_unit_ship", ["c3", "d3"])
+    ship_3 = Ship.new("three_unit_ship", ["a4", "b4", "c4"])
     board.place_ship(ship_1)
     expected = ["b1", "b2"]
     actual = board.get_invalid_cells_before_all_ships(ship_2)
@@ -366,10 +366,10 @@ end
   def test_it_can_return_all_invalid_cells
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["c3", "d3"])
-    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
-    ship_4 = Ship.new("ship_4", ["a1", "a2"])    
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("two_unit_ship", ["c3", "d3"])
+    ship_3 = Ship.new("three_unit_ship", ["a4", "b4", "c4"])
+    ship_4 = Ship.new("two_unit_ship", ["a1", "a2"])    
     expected = ["a4", "b4", "c4", "d4"]
     actual = board.get_all_invalid_cells(ship_1)
     assert_equal expected, actual
@@ -393,9 +393,9 @@ end
   def test_it_can_return_all_valid_cells
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["c3", "d3"])
-    ship_3 = Ship.new("ship_3", ["a4", "b4", "c4"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("two_unit_ship", ["c3", "d3"])
+    ship_3 = Ship.new("three_unit_ship", ["a4", "b4", "c4"])
     board.place_ship(ship_1)
     board.place_ship(ship_2)
     expected = ["a4", "b4"]
@@ -406,7 +406,7 @@ end
   def test_it_can_get_the_display_value_of_a_player_cell
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
     cell = board.get_cell("c1")
     assert_equal " ", board.player_cell_display_value(cell)
 
@@ -420,7 +420,7 @@ end
   def test_it_can_get_the_display_value_of_a_computer_cell
     board = Board.new("Computer")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
     cell = board.get_cell("c1")
     assert_equal " ", board.computer_cell_display_value(cell)
 
@@ -435,7 +435,7 @@ end
     computer_board = Board.new("Computer")
     computer_board.create_grid
     computer_cell = computer_board.get_cell("c1")
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
     assert_equal " ", computer_board.get_cell_value(computer_cell)
     
     player_board = Board.new("Player")
@@ -459,19 +459,19 @@ end
   def test_it_can_evaluate_ship_status_after_a_shot
     board = Board.new("Computer")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
     board.place_ship(ship_1)
     board.get_cell("c1").strike = "H"
     assert_equal "Hit!", board.evaluate_ship_status("c1")
     board.get_cell("c2").strike = "H"
-    assert_equal "Hit! Ship_1 has been sunk!", board.evaluate_ship_status("c2")
+    assert_equal "Hit! Two_unit_ship has been sunk!", board.evaluate_ship_status("c2")
   end
 
   def test_it_knows_if_victory_condition_is_met
     board = Board.new("Computer")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["d1", "d2", "d3"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("three_unit_ship", ["d1", "d2", "d3"])
     board.place_ship(ship_1)
     board.place_ship(ship_2)
     refute board.victory?
@@ -500,8 +500,8 @@ end
   def test_it_can_render_a_player_board
     board = Board.new("Player")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["d1", "d2", "d3"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("three_unit_ship", ["d1", "d2", "d3"])
     board.place_ship(ship_1)
     board.place_ship(ship_2)
     board.get_cell("c1").strike = "H"
@@ -515,8 +515,8 @@ end
   def test_it_can_render_a_computer_board
     board = Board.new("Computer")
     board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    ship_2 = Ship.new("ship_2", ["d1", "d2", "d3"])
+    ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
+    ship_2 = Ship.new("three_unit_ship", ["d1", "d2", "d3"])
     board.place_ship(ship_1)
     board.place_ship(ship_2)
     board.get_cell("c1").strike = "H"
