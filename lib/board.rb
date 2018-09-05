@@ -54,9 +54,9 @@ class Board
     if out_of_bounds_cells(ship) != ""
       return "Error.  Cell(s) #{out_of_bounds_cells(ship)} is out of bounds."
     elsif occupied_cells(ship) != ""
-      return "Error.  Cell(s) #{occupied_cells(ship)} is occupied."
-    elsif get_ship_direction(ship) == "Invalid ship location"
-      return "Error.  Ship coordinates must be adjoining and align horizontally or vertically."
+      return "Error.  Cell(s) #{occupied_cells(ship)} is occupied.  Ships cannot overlap."
+    elsif !["h", "v"].include?(get_ship_direction(ship))
+      return get_ship_direction(ship)
     else
       true
     end
@@ -168,7 +168,17 @@ class Board
     elsif array_identical?(rows) && array_incremental?(columns)
       return "h"
     else
-      return "Invalid ship location"
+      return evaluate_invalid_ship_direction(ship, rows, columns)
+    end
+  end
+
+  def evaluate_invalid_ship_direction(ship, rows, columns)
+    if !array_identical?(rows) && !array_identical?(columns)
+      return "Error.  Ships must be oriented either vertically or horizontally."
+    elsif !array_incremental?(rows) && !array_incremental?(columns)
+      return "Error.  Ship coordinates must be contiguous (no gaps)."
+    else
+      return "Ship is valid."
     end
   end
 
@@ -272,7 +282,6 @@ class Board
     strikes = target_ship.location.count do |location_coordinate|
       get_cell(location_coordinate).strike == "H"
     end
-    # binding.pry
     if strikes == target_ship.location.length
       target_ship.sunk = true
       return "Hit! #{target_ship.name.capitalize} has been sunk!"
