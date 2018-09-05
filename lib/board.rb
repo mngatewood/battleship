@@ -95,7 +95,7 @@ class Board
       elsif direction == "v"
         (start_coordinate[0].ord + element).chr.downcase + start_coordinate[1]
       else
-        "Invalid direction"
+        return "Invalid direction"
       end
     end
   end
@@ -126,7 +126,7 @@ class Board
     end
   end
 
-def get_invalid_rows_or_columns(length, index)
+  def get_invalid_rows_or_columns(length, index)
     all_edges = @cells.map {|cell|cell.coordinates[index]}
     unique_edges = all_edges.uniq.sort
     invalid_edges = unique_edges.reverse.take(length - 1)
@@ -136,28 +136,6 @@ def get_invalid_rows_or_columns(length, index)
     end
     return invalid_cells
   end
-
-  # def get_invalid_columns(length)
-  #   all_columns = @cells.map {|cell|cell.coordinates[1]}
-  #   unique_columns = all_columns.uniq.sort
-  #   invalid_columns = unique_columns.reverse.take(length - 1)
-  #   all_cells = @cells.map{|cell|cell.coordinates}
-  #   invalid_cells = all_cells.find_all do |cell|
-  #     invalid_columns.any?{|column|column == cell[1]}
-  #   end
-  #   return invalid_cells
-  # end
-
-  # def get_invalid_rows(length)
-  #   all_rows = @cells.map {|cell|cell.coordinates[0]}
-  #   unique_rows = all_rows.uniq.sort
-  #   invalid_rows = unique_rows.reverse.take(length - 1)
-  #   all_cells = @cells.map{|cell|cell.coordinates}
-  #   invalid_cells = all_cells.find_all do |cell|
-  #     invalid_rows.any?{|row|row == cell[0]}
-  #   end
-  #   return invalid_cells
-  # end
 
   def get_occupied_cells
     occupied_cells = @cells.find_all{|cell|cell.occupied}
@@ -218,7 +196,7 @@ def get_invalid_rows_or_columns(length, index)
       !existing_ship.location.include?(coordinate)
       end.sort
   end
-# combine above and below methods
+
   def get_coordinates_left_of_ship(existing_ship, new_ship)
     location = existing_ship.location
     length = new_ship.location.length
@@ -290,14 +268,14 @@ def get_invalid_rows_or_columns(length, index)
   end
 
   def evaluate_ship_status(coordinate)
-    ship = @ships.find{|ship|ship.location.include?(coordinate)}
-    strikes = ship.location.count do |coordinate|
-      get_cell(coordinate).strike == "H"
+    target_ship = @ships.find{|ship|ship.location.include?(coordinate)}
+    strikes = target_ship.location.count do |location_coordinate|
+      get_cell(location_coordinate).strike == "H"
     end
     # binding.pry
-    if strikes == ship.location.length
-      ship.sunk = true
-      return "Hit! #{ship.name.capitalize} has been sunk!"
+    if strikes == target_ship.location.length
+      target_ship.sunk = true
+      return "Hit! #{target_ship.name.capitalize} has been sunk!"
     else
       return "Hit!"
     end
