@@ -27,13 +27,6 @@ class GameTest < Minitest::Test
     assert_equal 16, game.boards[1].cells.length
   end
 
-  def test_it_knows_if_coordinates_are_valid
-    game = Game.new
-    game.create_board("Computer")
-    board = game.boards[0]
-    assert game.valid_coordinate?(board, "a1")
-    refute game.valid_coordinate?(board, "a5")
-  end
 
   def test_it_can_evaluate_a_shot
     game = Game.new

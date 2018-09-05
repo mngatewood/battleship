@@ -54,6 +54,14 @@ class BoardTest < Minitest::Test
     assert_equal "a1", cell.coordinates
   end
 
+  def test_it_knows_when_a_cell_is_invalid
+    board = Board.new("Player")
+    board.create_grid
+    assert_nil board.get_cell("a5")
+    assert_nil board.get_cell("e1")
+    assert_nil board.get_cell("f8")
+  end
+
   def test_it_occupies_a_cell_when_placing_a_ship
     board = Board.new("Player")
     board.create_grid
@@ -387,54 +395,82 @@ class BoardTest < Minitest::Test
     assert_equal expected, actual
   end
 
-  def test_it_can_get_the_print_value_of_a_player_cell
+  def test_it_can_get_the_display_value_of_a_player_cell
     board = Board.new("Player")
     board.create_grid
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
     cell = board.get_cell("c1")
-    assert_equal " ", board.player_cell_value(cell)
+    assert_equal " ", board.player_cell_display_value(cell)
 
     board.place_ship(ship_1)
-    assert_equal "S", board.player_cell_value(cell)
+    assert_equal "S", board.player_cell_display_value(cell)
 
     cell.strike = "H"
-    assert_equal "H", board.player_cell_value(cell)
+    assert_equal "H", board.player_cell_display_value(cell)
   end
 
-  def test_it_can_get_the_print_value_of_a_computer_cell
+  def test_it_can_get_the_display_value_of_a_computer_cell
     board = Board.new("Computer")
     board.create_grid
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
     cell = board.get_cell("c1")
-    assert_equal " ", board.computer_cell_value(cell)
+    assert_equal " ", board.computer_cell_display_value(cell)
 
     board.place_ship(ship_1)
-    assert_equal " ", board.computer_cell_value(cell)
+    assert_equal " ", board.computer_cell_display_value(cell)
 
     cell.strike = "M"
-    assert_equal "M", board.computer_cell_value(cell)
+    assert_equal "M", board.computer_cell_display_value(cell)
   end
 
-  def test_it_can_get_the_print_value_of_a_player_or_computer_cell
+  def test_it_can_get_the_display_value_of_a_player_or_computer_cell
     computer_board = Board.new("Computer")
-    player_board = Board.new("Player")
     computer_board.create_grid
-    player_board.create_grid
-    ship_1 = Ship.new("ship_1", ["c1", "c2"])
     computer_cell = computer_board.get_cell("c1")
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    assert_equal " ", computer_board.get_cell_value(computer_cell)
+    
+    player_board = Board.new("Player")
+    player_board.create_grid
     player_cell = player_board.get_cell("c1")
-    assert_equal " ", computer_board.get_cell_value(computer_cell)
     assert_equal " ", player_board.get_cell_value(player_cell)
-
+    
     computer_board.place_ship(ship_1)
-    player_board.place_ship(ship_1)
     assert_equal " ", computer_board.get_cell_value(computer_cell)
+
+    player_board.place_ship(ship_1)
     assert_equal "S", player_board.get_cell_value(player_cell)
 
     computer_cell.strike = "H"
-    player_cell.strike = "H"
     assert_equal "H", computer_board.get_cell_value(computer_cell)
+
+    player_cell.strike = "H"
     assert_equal "H", player_board.get_cell_value(player_cell)
+  end
+
+  def test_it_can_evaluate_ship_status_after_a_shot
+    board = Board.new("Computer")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    board.place_ship(ship_1)
+    board.get_cell("c1").strike = "H"
+    assert_equal "Hit!", board.evaluate_ship_status("c1")
+    board.get_cell("c2").strike = "H"
+    assert_equal "Hit! Ship_1 has been sunk!", board.evaluate_ship_status("c2")
+  end
+
+  def test_it_knows_if_victory_condition_is_met
+    board = Board.new("Computer")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["d1", "d2", "d3"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    refute board.victory?
+    ship_1.sunk = true
+    refute board.victory?
+    ship_2.sunk = true
+    assert board.victory?
   end
 
 end

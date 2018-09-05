@@ -111,7 +111,7 @@ def place_player_ship(length_number, length_word)
   print "Enter the squares for the #{length_word}-unit ship: "
   input = gets.chomp.downcase.split(" ")
   ship = Ship.new("#{length_word}_unit_ship", input)
-  if !@player_board.validate_placement_input(input, length_number)
+  if !@game.validate_placement_input(input, length_number)
     invalid_placement_warning 
   elsif @player_board.validate_location(ship) == true
     @player_board.place_ship(ship)
