@@ -512,7 +512,7 @@ end
     assert_output(expected) {board.render_board}
   end
 
-  def test_it_can_render_a_player_board
+  def test_it_can_render_a_computer_board
     board = Board.new("Computer")
     board.create_grid
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
