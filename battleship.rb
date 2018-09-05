@@ -76,8 +76,8 @@ end
 def initialize_computer
   @game.create_board("Computer")
   @computer_board = @game.boards.find{|board|board.name == "Computer"}
-  @game.place_computer_ship("two_unit_ship", 2)
-  @game.place_computer_ship("three_unit_ship", 3)
+  @computer_board.place_computer_ship("two_unit_ship", 2)
+  @computer_board.place_computer_ship("three_unit_ship", 3)
 end
 
 def initialize_player

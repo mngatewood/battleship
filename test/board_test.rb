@@ -133,6 +133,46 @@ class BoardTest < Minitest::Test
     assert_equal [ship_1], board.ships
   end
 
+  def test_it_can_place_a_ship_at_random_location
+    board = Board.new("Computer")
+    board.create_grid
+    board.place_computer_ship("small_ship", 2)
+    assert_equal 1, board.ships.length
+    assert_equal "small_ship", board.ships[0].name
+    assert_equal 2, board.ships[0].location.length
+  end
+
+  def test_it_can_return_an_array_of_valid_cells_for_ship_placement
+    board = Board.new("Computer")
+    board.create_grid
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3"]
+    actual = board.get_valid_placement_cells(2, "h")
+    assert_equal expected, actual
+
+    expected = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4"]
+    actual = board.get_valid_placement_cells(3, "v")
+    assert_equal expected, actual
+    
+    expected = ["a1", "b1", "c1", "d1"]
+    actual = board.get_valid_placement_cells(4, "h")
+    assert_equal expected, actual
+    
+    expected = []
+    actual = board.get_valid_placement_cells(5, "v")
+    assert_equal expected, actual
+  end
+
+  def test_it_can_return_a_ship_location_given_start_length_and_direction
+    board = Board.new("Computer")
+    expected = ["a1", "a2"]
+    actual = board.get_ship_location("a1", 2, "h")
+    assert_equal expected, actual
+
+    expected = ["b2", "c2", "d2"]
+    actual = board.get_ship_location("b2", 3, "v")
+    assert_equal expected, actual
+  end
+
   def test_it_returns_coordinates_of_edge_columns_invalid_for_ship_placement
     board = Board.new("Player")
     board.create_grid
