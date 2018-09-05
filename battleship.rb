@@ -74,14 +74,14 @@ def setup_game
 end
 
 def initialize_computer
-  @game.create_computer_board
+  @game.create_board("Computer")
   @computer_board = @game.boards.find{|board|board.name == "Computer"}
-  @game.place_computer_ship("two_unit_ship", 2)
-  @game.place_computer_ship("three_unit_ship", 3)
+  @computer_board.place_computer_ship("two_unit_ship", 2)
+  @computer_board.place_computer_ship("three_unit_ship", 3)
 end
 
 def initialize_player
-  @game.create_player_board
+  @game.create_board("Player")
   @player_board = @game.boards.find{|board|board.name == "Player"}
   player_placement_instructions
   interrupt
@@ -111,7 +111,7 @@ def place_player_ship(length_number, length_word)
   print "Enter the squares for the #{length_word}-unit ship: "
   input = gets.chomp.downcase.split(" ")
   ship = Ship.new("#{length_word}_unit_ship", input)
-  if !@player_board.validate_placement_input(input, length_number)
+  if !@game.validate_placement_input(input, length_number)
     invalid_placement_warning 
   elsif @player_board.validate_location(ship) == true
     @player_board.place_ship(ship)

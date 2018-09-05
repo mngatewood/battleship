@@ -30,6 +30,16 @@ class Board
     end
   end
 
+  def get_cell(coordinates)
+    @cells.find{|cell|cell.coordinates == coordinates}
+  end
+
+  def update_cell(ship)
+    ship.location.each do |coordinate|
+      get_cell(coordinate).occupied = true
+    end  
+  end  
+
   def place_ship(ship)
     if validate_location(ship) == true
       update_cell(ship)
@@ -37,18 +47,8 @@ class Board
       return true
     else
       return validate_location(ship)
-    end
-  end
-
-  def update_cell(ship)
-    ship.location.each do |coordinate|
-      get_cell(coordinate).occupied = true
-    end
-  end
-
-  def get_cell(coordinates)
-    @cells.find{|cell|cell.coordinates == coordinates}
-  end
+    end  
+  end  
 
   def validate_location(ship)
     if out_of_bounds_cells(ship) != ""
@@ -73,12 +73,39 @@ class Board
     return (ship.location - in_bound_cells_coordinates).join(", ")
   end
 
+  def place_computer_ship(ship_name, length)
+    direction = ["h", "v"].sample
+    valid_cells = get_valid_placement_cells(length, direction)
+    selected_cell = valid_cells.sample
+    ship_location = get_ship_location(selected_cell, length, direction)
+    ship = Ship.new(ship_name, ship_location)
+    place_ship(ship)
+  end
+  
+  def get_valid_placement_cells(length, direction)
+    temp_ship_location = get_ship_location("a1", length, direction)
+    temp_ship = Ship.new("temp_ship", temp_ship_location)
+    return get_all_valid_cells(temp_ship)
+  end
+  
+  def get_ship_location(start_coordinate, length, direction)
+    Array(0..length - 1).map do |element|
+      if direction == "h"
+        start_coordinate[0] + (start_coordinate[1].to_i + element).to_s
+      elsif direction == "v"
+        (start_coordinate[0].ord + element).chr.downcase + start_coordinate[1]
+      else
+        "Invalid direction"
+      end
+    end
+  end
+  
   def get_all_valid_cells(ship)
     invalid_cells = get_all_invalid_cells(ship)
     all_cells = @cells.map{|cell|cell.coordinates}
     return all_cells - invalid_cells
   end
-
+  
   def get_all_invalid_cells(ship)
     length = ship.location.length
     direction = get_ship_direction(ship)
@@ -228,13 +255,13 @@ class Board
 
   def get_cell_value(cell)
     if @name == "Player"
-      return player_cell_value(cell)
+      return player_cell_display_value(cell)
     elsif @name == "Computer"
-      return computer_cell_value(cell)
+      return computer_cell_display_value(cell)
     end
   end
 
-  def player_cell_value(cell)
+  def player_cell_display_value(cell)
     if !cell.strike && !cell.occupied
       return " "
     elsif !cell.strike
@@ -244,7 +271,7 @@ class Board
     end
   end
 
-  def computer_cell_value(cell)
+  def computer_cell_display_value(cell)
     if !cell.strike
       return " "
     else
@@ -252,12 +279,23 @@ class Board
     end
   end
 
-  def validate_placement_input(input, length)
-    array_length = input.length == length
-    coord_length = input.map{|coordinate|coordinate.chars.length}.uniq == [2]
-    coord_x = input.map{|coordinate|coordinate[1]}.join.count("0-9") == length
-    coord_y = input.map{|coordinate|coordinate[0]}.join.count("a-z") == length
-    return array_length && coord_length && coord_x && coord_y
+  def evaluate_ship_status(coordinate)
+    ship = @ships.find{|ship|ship.location.include?(coordinate)}
+    strikes = ship.location.count do |coordinate|
+      get_cell(coordinate).strike == "H"
+    end
+    # binding.pry
+    if strikes == ship.location.length
+      ship.sunk = true
+      return "Hit! #{ship.name.capitalize} has been sunk!"
+    else
+      return "Hit!"
+    end
+  end
+
+  def victory?
+    sunken_ships = @ships.count{|ship|ship.sunk}
+    @ships.length == sunken_ships
   end
 
 end
