@@ -15,7 +15,7 @@ class Game
     board.create_grid
   end
 
-  def validate_placement_input(input, length)
+  def valid_placement_input?(input, length)
     array_length = input.length == length
     coord_length = input.map{|coordinate|coordinate.chars.length}.uniq == [2]
     coord_x = input.map{|coordinate|coordinate[1]}.join.count("0-9") == length

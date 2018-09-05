@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require './test/helper_test'
 require './lib/board'
 
 class BoardTest < Minitest::Test
@@ -109,7 +108,8 @@ class BoardTest < Minitest::Test
     ship_1 = Ship.new("ship_1", ["d4", "d5"])
     ship_2 = Ship.new("ship_2", ["d3", "d4"])
     ship_3 = Ship.new("ship_3", ["b3", "c3", "d3"])
-    ship_4 = Ship.new("ship_4", ["b2", "c2", "d2"])
+    ship_4 = Ship.new("ship_4", ["a1", "b2"])
+    ship_5 = Ship.new("ship_5", ["b2", "c2", "d2"])
     expected = "Error.  Cell(s) d5 is out of bounds."
     assert_equal expected, board.place_ship(ship_1)
     assert_equal [], board.ships
@@ -121,8 +121,12 @@ class BoardTest < Minitest::Test
     assert_equal expected, board.place_ship(ship_3)
     assert_equal [ship_2], board.ships
 
-    assert board.place_ship(ship_4)
-    assert_equal [ship_2, ship_4], board.ships
+    expected = "Error.  Ship coordinates must be adjoining and align horizontally or vertically."
+    assert_equal expected, board.place_ship(ship_4)
+    assert_equal [ship_2], board.ships
+
+    assert board.place_ship(ship_5)
+    assert_equal [ship_2, ship_5], board.ships
   end
 
   def test_it_does_not_place_ships_out_of_bounds
@@ -179,19 +183,23 @@ class BoardTest < Minitest::Test
     expected = ["b2", "c2", "d2"]
     actual = board.get_ship_location("b2", 3, "v")
     assert_equal expected, actual
-  end
+
+    expected = "Invalid direction"
+    actual = board.get_ship_location("b2", 3, "u")
+    assert_equal expected, actual
+end
 
   def test_it_returns_coordinates_of_edge_columns_invalid_for_ship_placement
     board = Board.new("Player")
     board.create_grid
     length = 2
     expected = ["a4", "b4", "c4", "d4"]
-    actual = board.get_invalid_columns(length)
+    actual = board.get_invalid_rows_or_columns(length, 1)
     assert_equal expected, actual
 
     length = 3
     expected = ["a3", "a4", "b3", "b4", "c3", "c4", "d3", "d4"]
-    actual = board.get_invalid_columns(length)
+    actual = board.get_invalid_rows_or_columns(length, 1)
     assert_equal expected, actual
   end
 
@@ -200,12 +208,12 @@ class BoardTest < Minitest::Test
     board.create_grid
     length = 2
     expected = ["d1", "d2", "d3", "d4"]
-    actual = board.get_invalid_rows(length)
+    actual = board.get_invalid_rows_or_columns(length, 0)
     assert_equal expected, actual
 
     length = 3
     expected = ["c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
-    actual = board.get_invalid_rows(length)
+    actual = board.get_invalid_rows_or_columns(length, 0)
     assert_equal expected, actual
   end
 
@@ -471,6 +479,52 @@ class BoardTest < Minitest::Test
     refute board.victory?
     ship_2.sunk = true
     assert board.victory?
+  end
+
+  def test_it_can_render_board_heading
+    board = Board.new("Computer")
+    expected = "       COMPUTER       \n--------------------\n   | 1 | 2 | 3 | 4 |\n"
+    assert_output(expected) {board.render_board_heading}
+  end
+
+  def test_it_can_render_board_rows
+    board = Board.new("Computer")
+    board.create_grid
+    rows = board.cells.map {|cell|cell.coordinates[0]}.uniq.sort
+    columns = board.cells.map {|cell|cell.coordinates[1]}.uniq.sort
+
+    expected = " A |   |   |   |   |\n B |   |   |   |   |\n C |   |   |   |   |\n D |   |   |   |   |\n"
+    assert_output(expected) {board.get_board_rows(rows, columns)}
+  end
+
+  def test_it_can_render_a_player_board
+    board = Board.new("Player")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["d1", "d2", "d3"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    board.get_cell("c1").strike = "H"
+    board.get_cell("a1").strike = "M"
+    board.get_cell("d1").strike = "H"
+    board.get_cell("b4").strike = "M"
+    expected = "       PLAYER       \n--------------------\n   | 1 | 2 | 3 | 4 |\n A | M |   |   |   |\n B |   |   |   | M |\n C | H | S |   |   |\n D | H | S | S |   |\n\n"
+    assert_output(expected) {board.render_board}
+  end
+
+  def test_it_can_render_a_computer_board
+    board = Board.new("Computer")
+    board.create_grid
+    ship_1 = Ship.new("ship_1", ["c1", "c2"])
+    ship_2 = Ship.new("ship_2", ["d1", "d2", "d3"])
+    board.place_ship(ship_1)
+    board.place_ship(ship_2)
+    board.get_cell("c1").strike = "H"
+    board.get_cell("a1").strike = "M"
+    board.get_cell("d1").strike = "H"
+    board.get_cell("b4").strike = "M"
+    expected = "       COMPUTER       \n--------------------\n   | 1 | 2 | 3 | 4 |\n A | M |   |   |   |\n B |   |   |   | M |\n C | H |   |   |   |\n D | H |   |   |   |\n\n"
+    assert_output(expected) {board.render_board}
   end
 
 end
