@@ -112,42 +112,52 @@ class Board
     invalid_edges = get_invalid_edges(length, direction)
     occupied_cells = get_occupied_cells
     cells_before_ships = get_invalid_cells_before_all_ships(ship)
-    # combine occupied_cells and cell_before_ships
     invalid_cells = invalid_edges + occupied_cells + cells_before_ships
     return invalid_cells.uniq.sort
   end
 
-  def get_invalid_columns(length)
-    all_columns = @cells.map {|cell|cell.coordinates[1]}
-    unique_columns = all_columns.uniq.sort
-    invalid_columns = unique_columns.reverse.take(length - 1)
-    all_cells = @cells.map{|cell|cell.coordinates}
-    invalid_cells = all_cells.find_all do |cell|
-      invalid_columns.any?{|column|column == cell[1]}
-    end
-    return invalid_cells
-  end
-
-  def get_invalid_rows(length)
-    all_rows = @cells.map {|cell|cell.coordinates[0]}
-    unique_rows = all_rows.uniq.sort
-    invalid_rows = unique_rows.reverse.take(length - 1)
-    all_cells = @cells.map{|cell|cell.coordinates}
-    invalid_cells = all_cells.find_all do |cell|
-      invalid_rows.any?{|row|row == cell[0]}
-    end
-    return invalid_cells
-  end
-
   def get_invalid_edges(length, direction)
     if direction == "h" && length > 1
-      get_invalid_columns(length)
+      get_invalid_rows_or_columns(length, 1)
     elsif direction == "v" && length > 1
-      get_invalid_rows(length)
+      get_invalid_rows_or_columns(length, 0)
     else
       "Invalid parameters"
     end
   end
+
+def get_invalid_rows_or_columns(length, index)
+    all_edges = @cells.map {|cell|cell.coordinates[index]}
+    unique_edges = all_edges.uniq.sort
+    invalid_edges = unique_edges.reverse.take(length - 1)
+    all_cells = @cells.map{|cell|cell.coordinates}
+    invalid_cells = all_cells.find_all do |cell|
+      invalid_edges.any?{|edge|edge == cell[index]}
+    end
+    return invalid_cells
+  end
+
+  # def get_invalid_columns(length)
+  #   all_columns = @cells.map {|cell|cell.coordinates[1]}
+  #   unique_columns = all_columns.uniq.sort
+  #   invalid_columns = unique_columns.reverse.take(length - 1)
+  #   all_cells = @cells.map{|cell|cell.coordinates}
+  #   invalid_cells = all_cells.find_all do |cell|
+  #     invalid_columns.any?{|column|column == cell[1]}
+  #   end
+  #   return invalid_cells
+  # end
+
+  # def get_invalid_rows(length)
+  #   all_rows = @cells.map {|cell|cell.coordinates[0]}
+  #   unique_rows = all_rows.uniq.sort
+  #   invalid_rows = unique_rows.reverse.take(length - 1)
+  #   all_cells = @cells.map{|cell|cell.coordinates}
+  #   invalid_cells = all_cells.find_all do |cell|
+  #     invalid_rows.any?{|row|row == cell[0]}
+  #   end
+  #   return invalid_cells
+  # end
 
   def get_occupied_cells
     occupied_cells = @cells.find_all{|cell|cell.occupied}

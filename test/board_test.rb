@@ -186,12 +186,12 @@ class BoardTest < Minitest::Test
     board.create_grid
     length = 2
     expected = ["a4", "b4", "c4", "d4"]
-    actual = board.get_invalid_columns(length)
+    actual = board.get_invalid_rows_or_columns(length, 1)
     assert_equal expected, actual
 
     length = 3
     expected = ["a3", "a4", "b3", "b4", "c3", "c4", "d3", "d4"]
-    actual = board.get_invalid_columns(length)
+    actual = board.get_invalid_rows_or_columns(length, 1)
     assert_equal expected, actual
   end
 
@@ -200,12 +200,12 @@ class BoardTest < Minitest::Test
     board.create_grid
     length = 2
     expected = ["d1", "d2", "d3", "d4"]
-    actual = board.get_invalid_rows(length)
+    actual = board.get_invalid_rows_or_columns(length, 0)
     assert_equal expected, actual
 
     length = 3
     expected = ["c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
-    actual = board.get_invalid_rows(length)
+    actual = board.get_invalid_rows_or_columns(length, 0)
     assert_equal expected, actual
   end
 
