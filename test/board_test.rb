@@ -109,24 +109,38 @@ class BoardTest < Minitest::Test
     ship_2 = Ship.new("two_unit_ship", ["d3", "d4"])
     ship_3 = Ship.new("three_unit_ship", ["b3", "c3", "d3"])
     ship_4 = Ship.new("two_unit_ship", ["a1", "b2"])
-    ship_5 = Ship.new("three_unit_ship", ["b2", "c2", "d2"])
-    expected = "Error.  Cell(s) d5 is out of bounds."
+    ship_5 = Ship.new("two_unit_ship", ["a1", "a3"])
+    ship_6 = Ship.new("three_unit_ship", ["b2", "c2", "d2"])
+    expected = "Error. Cell(s) d5 is out of bounds."
     assert_equal expected, board.place_ship(ship_1)
     assert_equal [], board.ships
 
     assert board.place_ship(ship_2)
     assert_equal [ship_2], board.ships
 
-    expected = "Error.  Cell(s) d3 is occupied."
+    expected = "Error. Cell(s) d3 is occupied."
     assert_equal expected, board.place_ship(ship_3)
     assert_equal [ship_2], board.ships
 
-    expected = "Error.  Ship coordinates must be adjoining and align horizontally or vertically."
+    expected = "Error. Ships must be oriented vertically or horizontally."
     assert_equal expected, board.place_ship(ship_4)
     assert_equal [ship_2], board.ships
 
-    assert board.place_ship(ship_5)
-    assert_equal [ship_2, ship_5], board.ships
+    expected = "Error. Ship coordinates must be contiguous (no gaps)."
+    assert_equal expected, board.place_ship(ship_5)
+    assert_equal [ship_2], board.ships
+
+    assert board.place_ship(ship_6)
+    assert_equal [ship_2, ship_6], board.ships
+  end
+
+  def test_it_does_not_return_an_error_if_ship_direction_is_valid
+    board = Board.new("Player")
+    ship_1 = Ship.new("two_unit_ship", ["d3", "d4"])
+    rows = ship_1.location.map{|coordinate|coordinate[0]}
+    columns = ship_1.location.map{|coordinate|coordinate[1]}
+    actual = board.evaluate_invalid_ship_direction(ship_1, rows, columns)
+    assert_equal "Ship is valid.", actual
   end
 
   def test_it_does_not_place_ships_out_of_bounds
@@ -157,7 +171,8 @@ class BoardTest < Minitest::Test
   def test_it_can_return_an_array_of_valid_cells_for_ship_placement
     board = Board.new("Computer")
     board.create_grid
-    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "d1", "d2", "d3"]
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", 
+                "c1", "c2", "c3", "d1", "d2", "d3"]
     actual = board.get_valid_placement_cells(2, "h")
     assert_equal expected, actual
 
@@ -187,7 +202,7 @@ class BoardTest < Minitest::Test
     expected = "Invalid direction"
     actual = board.get_ship_location("b2", 3, "u")
     assert_equal expected, actual
-end
+  end
 
   def test_it_returns_coordinates_of_edge_columns_invalid_for_ship_placement
     board = Board.new("Player")
@@ -217,7 +232,7 @@ end
     assert_equal expected, actual
   end
 
-  def test_it_returns_coordinates_of_rows_and_columns_invalid_for_ship_placement
+  def test_it_returns_coordinates_of_rows_n_columns_invalid_for_ship_placement
     board = Board.new("Player")
     board.create_grid
     length = 2
@@ -265,7 +280,9 @@ end
     ship_3 = Ship.new("three_unit_ship", ["b2", "c3", "d4"])
     assert_equal "h", board.get_ship_direction(ship_1)
     assert_equal "v", board.get_ship_direction(ship_2)
-    assert_equal "Invalid ship location", board.get_ship_direction(ship_3)
+    expected = "Error. Ships must be oriented vertically or horizontally."
+    actual = board.get_ship_direction(ship_3)
+    assert_equal expected, actual 
   end
 
   def test_it_can_return_coordinates_above_an_existing_ship
@@ -307,19 +324,19 @@ end
 
     expected = ["c1", "d1"]
     actual = board.get_invalid_cells_before_ship(ship_2, ship_3)
-    assert_equal expected, actual   
+    assert_equal expected, actual
 
     expected = ["b2"]
     actual = board.get_invalid_cells_before_ship(ship_2, ship_4)
-    assert_equal expected, actual   
+    assert_equal expected, actual
 
     expected = ["a3", "a4", "b3", "b4"]
     actual = board.get_invalid_cells_before_ship(ship_1, ship_5)
-    assert_equal expected, actual   
+    assert_equal expected, actual
 
     expected = "Invalid ship placement"
     actual = board.get_invalid_cells_before_ship(ship_1, ship_6)
-    assert_equal expected, actual    
+    assert_equal expected, actual
   end  
 
   def test_it_returns_true_if_array_elements_are_incremental
@@ -369,7 +386,7 @@ end
     ship_1 = Ship.new("two_unit_ship", ["c1", "c2"])
     ship_2 = Ship.new("two_unit_ship", ["c3", "d3"])
     ship_3 = Ship.new("three_unit_ship", ["a4", "b4", "c4"])
-    ship_4 = Ship.new("two_unit_ship", ["a1", "a2"])    
+    ship_4 = Ship.new("two_unit_ship", ["a1", "a2"])
     expected = ["a4", "b4", "c4", "d4"]
     actual = board.get_all_invalid_cells(ship_1)
     assert_equal expected, actual
@@ -380,12 +397,14 @@ end
     assert_equal expected, actual
 
     board.place_ship(ship_2)
-    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
+    expected = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", 
+                "c2", "c3", "c4", "d1", "d2", "d3", "d4"]
     actual = board.get_all_invalid_cells(ship_3)
     assert_equal expected, actual
 
     board.place_ship(ship_3)
-    expected = ["a3", "a4", "b3", "b4", "c1", "c2", "c3", "c4", "d2", "d3", "d4"]
+    expected = ["a3", "a4", "b3", "b4", "c1", "c2", 
+                "c3", "c4", "d2", "d3", "d4"]
     actual = board.get_all_invalid_cells(ship_4)
     assert_equal expected, actual
   end
@@ -464,7 +483,9 @@ end
     board.get_cell("c1").strike = "H"
     assert_equal "Hit!", board.evaluate_ship_status("c1")
     board.get_cell("c2").strike = "H"
-    assert_equal "Hit! Two_unit_ship has been sunk!", board.evaluate_ship_status("c2")
+    expected = "Hit! Two_unit_ship has been sunk!"
+    actual = board.evaluate_ship_status("c2")
+    assert_equal expected, actual 
   end
 
   def test_it_knows_if_victory_condition_is_met

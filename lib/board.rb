@@ -52,9 +52,9 @@ class Board
 
   def validate_location(ship)
     if out_of_bounds_cells(ship) != ""
-      return "Error.  Cell(s) #{out_of_bounds_cells(ship)} is out of bounds."
+      return "Error. Cell(s) #{out_of_bounds_cells(ship)} is out of bounds."
     elsif occupied_cells(ship) != ""
-      return "Error.  Cell(s) #{occupied_cells(ship)} is occupied.  Ships cannot overlap."
+      return "Error. Cell(s) #{occupied_cells(ship)} is occupied."
     elsif !["h", "v"].include?(get_ship_direction(ship))
       return get_ship_direction(ship)
     else
@@ -174,9 +174,9 @@ class Board
 
   def evaluate_invalid_ship_direction(ship, rows, columns)
     if !array_identical?(rows) && !array_identical?(columns)
-      return "Error.  Ships must be oriented either vertically or horizontally."
+      return "Error. Ships must be oriented vertically or horizontally."
     elsif !array_incremental?(rows) && !array_incremental?(columns)
-      return "Error.  Ship coordinates must be contiguous (no gaps)."
+      return "Error. Ship coordinates must be contiguous (no gaps)."
     else
       return "Ship is valid."
     end
@@ -224,7 +224,7 @@ class Board
       end.sort
   end
 
-  def render_board #untested
+  def render_board
     render_board_heading
     rows = @cells.map {|cell|cell.coordinates[0]}.uniq.sort
     columns = @cells.map {|cell|cell.coordinates[1]}.uniq.sort
@@ -232,13 +232,13 @@ class Board
     puts ""
   end
 
-  def render_board_heading #untested
+  def render_board_heading
     puts "       #{@name.upcase}       "
     puts "--------------------"
     puts "   | 1 | 2 | 3 | 4 |"
   end
 
-  def get_board_rows(rows, columns) #untested
+  def get_board_rows(rows, columns)
     rows.each do |row|
       print " #{row.upcase} |"
       columns.each do |column|
