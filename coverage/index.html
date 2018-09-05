@@ -14,7 +14,7 @@
       <img src="./assets/0.10.2/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2018-09-05T17:06:28-06:00">2018-09-05T17:06:28-06:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2018-09-05T17:13:29-06:00">2018-09-05T17:13:29-06:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -348,8 +348,8 @@
           <code class="ruby">  def get_cell(coordinates)</code>
         </li>
       
-        <li class="covered" data-hits="1425" data-linenumber="34">
-          <span class="hits">1425</span>
+        <li class="covered" data-hits="1434" data-linenumber="34">
+          <span class="hits">1434</span>
           
           <code class="ruby">    @cells.find{|cell|cell.coordinates == coordinates}</code>
         </li>
@@ -708,20 +708,20 @@
           <code class="ruby">      if direction == &quot;h&quot;</code>
         </li>
       
-        <li class="covered" data-hits="8" data-linenumber="94">
-          <span class="hits">8</span>
+        <li class="covered" data-hits="12" data-linenumber="94">
+          <span class="hits">12</span>
           
           <code class="ruby">        start_coordinate[0] + (start_coordinate[1].to_i + element).to_s</code>
         </li>
       
-        <li class="covered" data-hits="16" data-linenumber="95">
-          <span class="hits">16</span>
+        <li class="covered" data-hits="12" data-linenumber="95">
+          <span class="hits">12</span>
           
           <code class="ruby">      elsif direction == &quot;v&quot;</code>
         </li>
       
-        <li class="covered" data-hits="15" data-linenumber="96">
-          <span class="hits">15</span>
+        <li class="covered" data-hits="11" data-linenumber="96">
+          <span class="hits">11</span>
           
           <code class="ruby">        (start_coordinate[0].ord + element).chr.downcase + start_coordinate[1]</code>
         </li>
@@ -870,20 +870,20 @@
           <code class="ruby">    if direction == &quot;h&quot; &amp;&amp; length &gt; 1</code>
         </li>
       
-        <li class="covered" data-hits="5" data-linenumber="121">
-          <span class="hits">5</span>
+        <li class="covered" data-hits="6" data-linenumber="121">
+          <span class="hits">6</span>
           
           <code class="ruby">      get_invalid_rows_or_columns(length, 1)</code>
         </li>
       
-        <li class="covered" data-hits="9" data-linenumber="122">
-          <span class="hits">9</span>
+        <li class="covered" data-hits="8" data-linenumber="122">
+          <span class="hits">8</span>
           
           <code class="ruby">    elsif direction == &quot;v&quot; &amp;&amp; length &gt; 1</code>
         </li>
       
-        <li class="covered" data-hits="7" data-linenumber="123">
-          <span class="hits">7</span>
+        <li class="covered" data-hits="6" data-linenumber="123">
+          <span class="hits">6</span>
           
           <code class="ruby">      get_invalid_rows_or_columns(length, 0)</code>
         </li>
@@ -1146,20 +1146,20 @@
           <code class="ruby">    if array_identical?(columns) &amp;&amp; array_incremental?(rows)</code>
         </li>
       
-        <li class="covered" data-hits="36" data-linenumber="167">
-          <span class="hits">36</span>
+        <li class="covered" data-hits="34" data-linenumber="167">
+          <span class="hits">34</span>
           
           <code class="ruby">      return &quot;v&quot;</code>
         </li>
       
-        <li class="covered" data-hits="48" data-linenumber="168">
-          <span class="hits">48</span>
+        <li class="covered" data-hits="50" data-linenumber="168">
+          <span class="hits">50</span>
           
           <code class="ruby">    elsif array_identical?(rows) &amp;&amp; array_incremental?(columns)</code>
         </li>
       
-        <li class="covered" data-hits="37" data-linenumber="169">
-          <span class="hits">37</span>
+        <li class="covered" data-hits="39" data-linenumber="169">
+          <span class="hits">39</span>
           
           <code class="ruby">      return &quot;h&quot;</code>
         </li>
@@ -1284,8 +1284,8 @@
           <code class="ruby">  def array_identical?(array)</code>
         </li>
       
-        <li class="covered" data-hits="498" data-linenumber="190">
-          <span class="hits">498</span>
+        <li class="covered" data-hits="504" data-linenumber="190">
+          <span class="hits">504</span>
           
           <code class="ruby">    array.all?{|element|element == array[0]}</code>
         </li>
