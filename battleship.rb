@@ -43,7 +43,7 @@ def welcome_menu
   elsif input == "q" || input == "quit"
     exit
   else
-    display_welcome_menu_help
+    display_welcome_menu_help(input)
   end
 end
 
@@ -60,7 +60,7 @@ def display_instructions
   welcome_menu
 end
 
-def display_welcome_menu_help
+def display_welcome_menu_help(input)
   puts "", "'#{input}' is not a valid input."
   puts "Valid inputs are 'p', 'i', 'q', 'play', 'instructions', and 'quit'."
   welcome_menu
@@ -111,7 +111,7 @@ def place_player_ship(length_number, length_word)
   print "Enter the squares for the #{length_word}-unit ship: "
   input = gets.chomp.downcase.split(" ")
   ship = Ship.new("#{length_word}_unit_ship", input)
-  if !@game.validate_placement_input?(input, length_number)
+  if !@game.valid_placement_input?(input, length_number)
     invalid_placement_warning 
   elsif @player_board.validate_location(ship) == true
     @player_board.place_ship(ship)
@@ -152,7 +152,7 @@ end
 def player_shot(shot_result)
   render_game_boards
   puts shot_result, ""
-  @game.victory?(@computer_board) && victory_end_game
+  @computer_board.victory? && victory_end_game
   puts "Your turn is complete.", ""
   interrupt
   computer_turn
@@ -172,11 +172,13 @@ def defeat_end_game
   start
 end
 
-def computer_turn # move to game?
-  shot_result = @game.fire_torpedos(@player_board, computer_target)
+def computer_turn
   render_game_boards
-  puts "Computer fired at square #{computer_target}.", "", shot_result, ""
-  @game.victory?(@player_board) && defeat_end_game
+  target = computer_target
+  shot_result = @game.fire_torpedos(@player_board, target)
+  render_game_boards
+  puts "Computer fired at square #{target}.", "", shot_result, ""
+  @player_board.victory? && defeat_end_game
   puts "Computer turn is complete.", ""
   interrupt
   player_turn
