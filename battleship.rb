@@ -51,9 +51,9 @@ def display_instructions
   title_screen
   puts "Summary:  Battleship is a classic two player game where players try to
           sink their opponent’s navy ships.", ""
-  puts "Object:   The basic object of the game of Battleship is to hide your ship 
-          fleet somewhere in your ocean and by calling out basic coordinates, 
-          find your opponent’s fleet before they find yours.", ""
+  puts "Object:   The basic object of the game of Battleship is to hide your 
+          ship fleet somewhere in your ocean and by calling out basic 
+          coordinates, find your opponent’s fleet before they find yours.", ""
   puts "Victory:  To become the winner of Battleship you must be able 
           to find (sink) all ships in your opponent’s fleet before they sink 
           yours.", ""
@@ -128,7 +128,8 @@ def invalid_placement_warning
   render_player_board_only
   puts "", "Please enter a valid set of coordinates."
   puts "For a two-unit ship, an example of a valid input would be a2 a3."
-  puts "For a three-unit ship, an example of a valid input would be a2 a3 a4.", ""
+  puts "For a three-unit ship, an example of a valid input would be a2 a3 a4."
+  puts ""
 end
 
 def player_turn

@@ -40,7 +40,9 @@ class GameTest < Minitest::Test
     assert_equal "Hit!", game.evaluate_shot(board, target_cell)
 
     target_cell = board.get_cell("a1")
-    assert_equal "You already fired there.", game.evaluate_shot(board, target_cell)
+    expected = "You already fired there."
+    actual = game.evaluate_shot(board, target_cell)
+    assert_equal expected, actual
   end
 
   def test_it_can_fire_torpedos
@@ -75,7 +77,9 @@ class GameTest < Minitest::Test
     assert_equal "Hit!", game.fire_torpedos(computer_board, "c1")
     refute ship_1.sunk
 
-    assert_equal "Hit! Two_unit_ship has been sunk!", game.fire_torpedos(computer_board, "c2")
+    expected = "Hit! Two_unit_ship has been sunk!"
+    actual = game.fire_torpedos(computer_board, "c2")
+    assert_equal expected, actual 
     assert ship_1.sunk
   end
 
