@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require './test/helper_test'
 require './lib/game'
 
 class GameTest < Minitest::Test
@@ -70,13 +69,13 @@ class GameTest < Minitest::Test
   def test_it_can_sink_a_ship
     game = Game.new
     game.create_board("Computer")
-    board = game.boards.find{|board|board.name == "Computer"}
+    computer_board = game.boards.find{|board|board.name == "Computer"}
     ship_1 = Ship.new("ship_1", ["c1", "c2"])
-    board.place_ship(ship_1)
-    assert_equal "Hit!", game.fire_torpedos(board, "c1")
+    computer_board.place_ship(ship_1)
+    assert_equal "Hit!", game.fire_torpedos(computer_board, "c1")
     refute ship_1.sunk
 
-    assert_equal "Hit! Ship_1 has been sunk!", game.fire_torpedos(board, "c2")
+    assert_equal "Hit! Ship_1 has been sunk!", game.fire_torpedos(computer_board, "c2")
     assert ship_1.sunk
   end
 
